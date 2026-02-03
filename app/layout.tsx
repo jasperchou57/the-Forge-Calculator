@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+// Use system fonts for reliable builds (no network dependency)
+const fontVars = '--font-sans --font-mono';
 
 export const metadata: Metadata = {
   title: 'ForgeCalc - The Forge Calculator | Roblox Forging Probability Tool',
@@ -39,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-void text-gray-300 selection:bg-accent-blue/30 selection:text-white`}>
+      <body className="font-sans bg-void text-gray-300 selection:bg-accent-blue/30 selection:text-white">
         <div className="fixed inset-0 bg-grid-pattern pointer-events-none opacity-40" />
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-glow-gradient pointer-events-none" />
         {children}
