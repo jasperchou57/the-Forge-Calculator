@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import React, { useState, useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
@@ -55,16 +54,11 @@ function toOre(raw: OreDataRaw): Ore {
     };
 }
 
-// Inner component that uses useSearchParams
+// Main calculator component - simplified without URL sync
 const CalculatorDemoInner: React.FC = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const pathname = usePathname();
-
     // State
     const [selectedOres, setSelectedOres] = useState<SelectedOre[]>([]);
     const [isCopied, setIsCopied] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
     const [activeWorld, setActiveWorld] = useState<'W1/W2' | 'W3'>('W1/W2');
     const [craftingMode, setCraftingMode] = useState<'weapon' | 'armor'>('weapon');
     const [searchTerm, setSearchTerm] = useState('');
@@ -81,45 +75,6 @@ const CalculatorDemoInner: React.FC = () => {
             )
             .map(toOre);
     }, [activeWorld, searchTerm]);
-
-    // Load from URL on mount
-    useEffect(() => {
-        if (isInitialized) return;
-
-        const oresParam = searchParams.get('ores');
-        if (oresParam) {
-            // Format: slug:qty,slug:qty
-            const parts = oresParam.split(',');
-            const loadedOres: SelectedOre[] = [];
-            
-            parts.forEach(part => {
-                const [slug, qtyStr] = part.includes(':') ? part.split(':') : [part, '1'];
-                const qty = parseInt(qtyStr) || 1;
-                const rawOre = ORES_DATA.find(o => o.slug === slug);
-                if (rawOre) {
-                    loadedOres.push({ ore: toOre(rawOre), quantity: qty });
-                }
-            });
-            
-            setSelectedOres(loadedOres.slice(0, 4)); // Max 4 types
-        }
-        setIsInitialized(true);
-    }, [searchParams, isInitialized]);
-
-    // Update URL when selection changes
-    useEffect(() => {
-        if (!isInitialized) return;
-
-        const params = new URLSearchParams(searchParams);
-        if (selectedOres.length > 0) {
-            const oresStr = selectedOres.map(s => `${s.ore.slug}:${s.quantity}`).join(',');
-            params.set('ores', oresStr);
-        } else {
-            params.delete('ores');
-        }
-
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }, [selectedOres, router, pathname, searchParams, isInitialized]);
 
     // Real-time calculation with error handling
     const stats = useMemo(() => {

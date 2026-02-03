@@ -124,12 +124,12 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <Link href="#calculator">
-              <Button size="lg" icon={<Calculator className="w-5 h-5" />}>Open Calculator</Button>
-            </Link>
-            <Link href="/optimize">
-              <Button size="lg" variant="secondary" icon={<Settings className="w-5 h-5" />}>Try Optimizer</Button>
-            </Link>
+            <Button asChild size="lg" icon={<Calculator className="w-5 h-5" />}>
+              <Link href="#calculator">Open Calculator</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary" icon={<Settings className="w-5 h-5" />}>
+              <Link href="/optimize">Try Optimizer</Link>
+            </Button>
           </div>
         </section>
 
@@ -157,11 +157,9 @@ export default function Home() {
             <p className="text-gray-400 text-sm mb-4">
               Browse complete ore data including multipliers, rarity, traits, and drop locations for World 1, World 2, and World 3.
             </p>
-            <Link href="/ores">
-              <Button variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
-                View All Ores
-              </Button>
-            </Link>
+            <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
+              <Link href="/ores">View All Ores</Link>
+            </Button>
           </Card>
 
           <Card className="p-6" hoverEffect>
@@ -177,11 +175,9 @@ export default function Home() {
             <p className="text-gray-400 text-sm mb-4">
               Explore all weapon categories (Dagger, Katana, Great Sword, Colossal) and armor classes with DPS rankings.
             </p>
-            <Link href="/optimize">
-              <Button variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
-                Explore Equipment
-              </Button>
-            </Link>
+            <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
+              <Link href="/optimize">Explore Equipment</Link>
+            </Button>
           </Card>
         </section>
 
@@ -326,12 +322,12 @@ export default function Home() {
             Join thousands of players using ForgeCalc to optimize their crafting. No signup required – start calculating now.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="#calculator">
-              <Button size="lg" icon={<Calculator className="w-5 h-5" />}>Start Calculating</Button>
-            </Link>
-            <Link href="/ores">
-              <Button size="lg" variant="secondary" icon={<BookOpen className="w-5 h-5" />}>Browse All Ores</Button>
-            </Link>
+            <Button asChild size="lg" icon={<Calculator className="w-5 h-5" />}>
+              <Link href="#calculator">Start Calculating</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary" icon={<BookOpen className="w-5 h-5" />}>
+              <Link href="/ores">Browse All Ores</Link>
+            </Button>
           </div>
         </section>
 

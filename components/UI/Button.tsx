@@ -1,20 +1,43 @@
 import React from 'react';
 
+interface SlotProps extends React.HTMLAttributes<HTMLElement> {
+  children: React.ReactElement;
+}
+
+const Slot = React.forwardRef<HTMLElement, SlotProps>(({ children, className, ...props }, ref) => {
+  if (!React.isValidElement(children)) {
+    return null;
+  }
+
+  return React.cloneElement(children, {
+    ...props,
+    ref,
+    className: [className, (children.props as { className?: string }).className]
+      .filter(Boolean)
+      .join(' ')
+  });
+});
+
+Slot.displayName = 'Slot';
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   children?: React.ReactNode;
   icon?: React.ReactNode;
+  asChild?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ 
+const Button = React.forwardRef<HTMLElement, ButtonProps>(({ 
   variant = 'primary', 
   size = 'md', 
   children, 
   className = '', 
   icon,
+  asChild = false,
+  type,
   ...props 
-}) => {
+}, ref) => {
   const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50 disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
@@ -28,16 +51,21 @@ const Button: React.FC<ButtonProps> = ({
     md: "text-sm px-4 py-2 gap-2",
     lg: "text-base px-6 py-3 gap-2.5"
   };
+  const Comp = asChild ? Slot : 'button';
+  const componentProps = asChild ? props : { type: type ?? 'button', ...props };
 
   return (
-    <button 
+    <Comp 
+      ref={ref}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      {...props}
+      {...componentProps}
     >
       {icon && <span className="w-4 h-4">{icon}</span>}
       {children}
-    </button>
+    </Comp>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;

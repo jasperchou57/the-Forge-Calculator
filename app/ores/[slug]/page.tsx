@@ -84,11 +84,11 @@ export default async function OreDetailPage({ params }: PageProps) {
                                 <h1 className="text-5xl font-bold font-heading">{ore.name}</h1>
 
                                 <div className="flex gap-4 pt-4">
-                                    <Link href={`/?ores=${ore.slug},${ore.slug},${ore.slug}`}>
-                                        <Button icon={<Sparkles className="w-4 h-4" />}>
+                                    <Button asChild icon={<Sparkles className="w-4 h-4" />}>
+                                        <Link href={`/?ores=${ore.slug},${ore.slug},${ore.slug}`}>
                                             Simulate with {ore.name}
-                                        </Button>
-                                    </Link>
+                                        </Link>
+                                    </Button>
                                     <Button variant="secondary" icon={<Share2 className="w-4 h-4" />}>
                                         Share
                                     </Button>
