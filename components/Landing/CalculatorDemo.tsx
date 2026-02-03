@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
@@ -9,7 +10,15 @@ import { SelectedOre, Ore } from '@/types';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '@/lib/calculator';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Sparkles, RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+
+// Dynamically import Recharts to avoid SSR issues
+const BarChart = dynamic(() => import('recharts').then(mod => mod.BarChart), { ssr: false });
+const Bar = dynamic(() => import('recharts').then(mod => mod.Bar), { ssr: false });
+const XAxis = dynamic(() => import('recharts').then(mod => mod.XAxis), { ssr: false });
+const YAxis = dynamic(() => import('recharts').then(mod => mod.YAxis), { ssr: false });
+const Tooltip = dynamic(() => import('recharts').then(mod => mod.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import('recharts').then(mod => mod.ResponsiveContainer), { ssr: false });
+const Cell = dynamic(() => import('recharts').then(mod => mod.Cell), { ssr: false });
 
 // Type assertion for ore data
 interface OreDataRaw {
@@ -174,10 +183,10 @@ const CalculatorDemoInner: React.FC = () => {
     const maxOres = craftingMode === 'weapon' ? 51 : 45;
     const canAddMore = selectedOres.length < 4 && totalOres < maxOres;
 
-    // Chart data
+    // Chart data - safely handle empty arrays
     const probabilityData = craftingMode === 'weapon' 
-        ? stats.weaponProbabilities.map(p => ({ name: p.category, prob: p.chance, color: p.color }))
-        : stats.armorProbabilities.map(p => ({ name: p.class, prob: p.chance, color: p.color }));
+        ? (stats.weaponProbabilities || []).map(p => ({ name: p.category, prob: p.chance, color: p.color }))
+        : (stats.armorProbabilities || []).map(p => ({ name: p.class, prob: p.chance, color: p.color }));
 
     return (
         <div className="w-full max-w-6xl mx-auto my-12">
