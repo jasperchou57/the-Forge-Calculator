@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
@@ -9,7 +10,12 @@ import { SelectedOre, Ore } from '@/types';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '@/lib/calculator';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Sparkles, RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+
+// Dynamically import Recharts to prevent SSR hydration mismatch
+const RechartsChart = dynamic(
+  () => import('./RechartsChart'),
+  { ssr: false, loading: () => <div className="h-44 w-full flex items-center justify-center text-gray-500 text-sm">Loading chart...</div> }
+);
 
 // Type assertion for ore data
 interface OreDataRaw {
@@ -411,39 +417,12 @@ const CalculatorDemoInner: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Chart Area */}
+                        {/* Chart Area - dynamically loaded to prevent SSR hydration errors */}
                         {probabilityData.length > 0 && (
-                            <div className="h-44 w-full relative">
-                                <div className="absolute top-0 left-0 text-xs text-gray-500 font-mono">
-                                    {craftingMode === 'weapon' ? 'WEAPON TYPE' : 'ARMOR CLASS'} PROBABILITY
-                                </div>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={probabilityData} barSize={20} margin={{ top: 20 }}>
-                                        <XAxis
-                                            dataKey="name"
-                                            stroke="#333"
-                                            tick={{ fill: '#666', fontSize: 9, fontFamily: 'monospace' }}
-                                            tickLine={false}
-                                            axisLine={false}
-                                            angle={-45}
-                                            textAnchor="end"
-                                            height={60}
-                                        />
-                                        <YAxis hide />
-                                        <Tooltip
-                                            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                            contentStyle={{ backgroundColor: '#161719', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }}
-                                            itemStyle={{ color: '#fff', fontFamily: 'monospace', fontSize: '12px' }}
-                                            formatter={(value) => [`${value}%`, 'Chance']}
-                                        />
-                                        <Bar dataKey="prob" radius={[2, 2, 0, 0]}>
-                                            {probabilityData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
-                                            ))}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
+                            <RechartsChart 
+                                data={probabilityData} 
+                                title={craftingMode === 'weapon' ? 'WEAPON TYPE PROBABILITY' : 'ARMOR CLASS PROBABILITY'}
+                            />
                         )}
 
                         {/* Traits Analysis */}
