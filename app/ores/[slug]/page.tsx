@@ -2,13 +2,31 @@ import React from 'react';
 import Header from '@/components/Layout/Header';
 import Button from '@/components/UI/Button';
 import oresJSON from '@/data/v20260201/ores.json';
-import { Ore } from '@/types';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, Share2, Sparkles, MapPin, Zap, TrendingUp } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-const ORES_DATA = oresJSON.ores as Ore[];
+// Ore data with color mapping
+interface OreData {
+    slug: string;
+    name: string;
+    rarity: string;
+    chance: string;
+    multiplier: number;
+    price: number | null;
+    trait: string | null;
+    rocks: string[];
+    location: string;
+}
+
+const ORES_DATA = oresJSON.ores as OreData[];
+const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
+
+// Helper to get color from rarity
+function getOreColor(rarity: string): string {
+    return RARITY_COLORS[rarity] || '#6B7280';
+}
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -58,7 +76,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                         {/* Background Glow */}
                         <div
                             className="absolute top-0 right-0 w-96 h-96 bg-accent-blue/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
-                            style={{ backgroundColor: ore.color, opacity: 0.15 }}
+                            style={{ backgroundColor: getOreColor(ore.rarity), opacity: 0.15 }}
                         ></div>
 
                         <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
@@ -66,7 +84,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                             {/* Ore Icon Large */}
                             <div
                                 className="w-32 h-32 rounded-full border-4 border-white/10 flex items-center justify-center shadow-2xl"
-                                style={{ backgroundColor: ore.color }}
+                                style={{ backgroundColor: getOreColor(ore.rarity) }}
                             >
                                 {/* No image asset yet, using color block */}
                             </div>

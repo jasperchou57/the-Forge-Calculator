@@ -1,11 +1,29 @@
 import Link from 'next/link';
 import Header from '@/components/Layout/Header';
 import oresJSON from '@/data/v20260201/ores.json';
-import { Ore } from '@/types';
 import { Metadata } from 'next';
 import { ArrowRight, Database } from 'lucide-react';
 
-const ORES_DATA = oresJSON.ores as Ore[];
+// Ore data with color mapping
+interface OreData {
+    slug: string;
+    name: string;
+    rarity: string;
+    chance: string;
+    multiplier: number;
+    price: number | null;
+    trait: string | null;
+    rocks: string[];
+    location: string;
+}
+
+const ORES_DATA = oresJSON.ores as OreData[];
+const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
+
+// Helper to get color from rarity
+function getOreColor(rarity: string): string {
+    return RARITY_COLORS[rarity] || '#6B7280';
+}
 
 export const metadata: Metadata = {
     title: 'All Ores List & Stats - The Forge Roblox Wiki',
@@ -47,7 +65,7 @@ export default function OresHubPage() {
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/10" style={{ backgroundColor: ore.color }}>
+                                        <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/10" style={{ backgroundColor: getOreColor(ore.rarity) }}>
                                             {/* Icon placeholder or initial */}
                                         </div>
                                         <div>

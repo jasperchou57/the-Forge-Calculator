@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className="font-sans bg-void text-gray-300 selection:bg-accent-blue/30 selection:text-white">
         <div className="fixed inset-0 bg-grid-pattern pointer-events-none opacity-40" />
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-glow-gradient pointer-events-none" />

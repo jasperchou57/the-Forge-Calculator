@@ -15,16 +15,25 @@ const Badge: React.FC<BadgeProps> = ({ children, variant = 'neutral', pulsing = 
     accent: "bg-accent-blue/10 text-accent-blue border-accent-blue/20",
   };
 
+  const gapClass = pulsing ? 'gap-1.5' : 'gap-0';
+  const pulseWrapperClass = pulsing
+    ? 'relative flex h-1.5 w-1.5'
+    : 'relative flex h-0 w-0 overflow-hidden';
+  const pingClass = pulsing
+    ? 'animate-ping opacity-75'
+    : 'opacity-0';
+  const dotClass = pulsing
+    ? 'opacity-100'
+    : 'opacity-0';
+
   return (
     <span className={`
-      inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-mono border ${styles[variant]}
+      inline-flex items-center ${gapClass} px-2 py-0.5 rounded-full text-xs font-mono border ${styles[variant]}
     `}>
-      {pulsing && (
-        <span className="relative flex h-1.5 w-1.5">
-          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current`}></span>
-          <span className={`relative inline-flex rounded-full h-1.5 w-1.5 bg-current`}></span>
-        </span>
-      )}
+      <span className={pulseWrapperClass} aria-hidden="true">
+        <span className={`${pingClass} absolute inline-flex h-full w-full rounded-full bg-current`}></span>
+        <span className={`${dotClass} relative inline-flex rounded-full h-1.5 w-1.5 bg-current`}></span>
+      </span>
       {children}
     </span>
   );
