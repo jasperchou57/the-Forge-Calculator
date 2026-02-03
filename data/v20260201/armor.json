@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "version": "v20260201",
+    "source": "bloxinformer, fandom wiki, gamerant",
+    "lastUpdated": "2026-02-01",
+    "totalArmorPieces": 21,
+    "armorClasses": 3
+  },
+  "classColors": {
+    "Light": "#94A3B8",
+    "Medium": "#3B82F6",
+    "Heavy": "#F59E0B"
+  },
+  "classes": [
+    {
+      "name": "Light",
+      "oreRange": "3-10",
+      "description": "Best movement speed, lowest defense",
+      "pieces": ["Light Helmet", "Light Chestplate", "Light Leggings"]
+    },
+    {
+      "name": "Medium",
+      "oreRange": "10-30",
+      "variants": ["Samurai", "Viking"],
+      "description": "Balanced defense and mobility",
+      "pieces": ["Medium Helmet", "Medium Chestplate", "Medium Leggings"]
+    },
+    {
+      "name": "Heavy",
+      "oreRange": "30-45",
+      "variants": ["Knight", "Dark Knight", "Wolf"],
+      "description": "Maximum defense, slowest movement",
+      "pieces": ["Heavy Helmet", "Heavy Chestplate", "Heavy Leggings"]
+    }
+  ],
+  "armorPieces": {
+    "light": {
+      "helmet": {"name": "Light Helmet", "healthBonus": "5%", "baseDefense": 15, "basePrice": 68, "oreRequired": "3-10"},
+      "chestplate": {"name": "Light Chestplate", "healthBonus": "8%", "baseDefense": 25, "basePrice": 85, "oreRequired": "3-10"},
+      "leggings": {"name": "Light Leggings", "healthBonus": "6%", "baseDefense": 20, "basePrice": 75, "oreRequired": "3-10"}
+    },
+    "medium_samurai": {
+      "helmet": {"name": "Samurai Helmet", "healthBonus": "8%", "baseDefense": 25, "basePrice": 205, "oreRequired": "10-30"},
+      "chestplate": {"name": "Samurai Chestplate", "healthBonus": "12%", "baseDefense": 40, "basePrice": 256, "oreRequired": "10-30"},
+      "leggings": {"name": "Samurai Leggings", "healthBonus": "10%", "baseDefense": 32, "basePrice": 230, "oreRequired": "10-30"}
+    },
+    "medium_viking": {
+      "helmet": {"name": "Viking Helmet", "healthBonus": "10%", "baseDefense": 28, "basePrice": 205, "oreRequired": "10-30"},
+      "chestplate": {"name": "Viking Chestplate", "healthBonus": "15%", "baseDefense": 45, "basePrice": 256, "oreRequired": "10-30"},
+      "leggings": {"name": "Viking Leggings", "healthBonus": "12%", "baseDefense": 36, "basePrice": 230, "oreRequired": "10-30"}
+    },
+    "heavy_knight": {
+      "helmet": {"name": "Knight Helmet", "healthBonus": "12%", "baseDefense": 35, "basePrice": 485, "oreRequired": "30-45"},
+      "chestplate": {"name": "Knight Chestplate", "healthBonus": "18%", "baseDefense": 55, "basePrice": 607, "oreRequired": "30-45"},
+      "leggings": {"name": "Knight Leggings", "healthBonus": "15%", "baseDefense": 45, "basePrice": 545, "oreRequired": "30-45"}
+    },
+    "heavy_dark_knight": {
+      "helmet": {"name": "Dark Knight Helmet", "healthBonus": "15%", "baseDefense": 40, "basePrice": 850, "oreRequired": "30-45"},
+      "chestplate": {"name": "Dark Knight Chestplate", "healthBonus": "22%", "baseDefense": 65, "basePrice": 1063, "oreRequired": "30-45"},
+      "leggings": {"name": "Dark Knight Leggings", "healthBonus": "18%", "baseDefense": 52, "basePrice": 955, "oreRequired": "30-45"}
+    },
+    "heavy_wolf": {
+      "helmet": {"name": "Wolf Helmet", "healthBonus": "18%", "baseDefense": 45, "basePrice": 1355, "oreRequired": "30-45", "notes": "Current meta - highest stats"},
+      "chestplate": {"name": "Wolf Chestplate", "healthBonus": "25%", "baseDefense": 75, "basePrice": 1694, "oreRequired": "30-45", "notes": "Current meta - highest defense"},
+      "leggings": {"name": "Wolf Leggings", "healthBonus": "22%", "baseDefense": 60, "basePrice": 1524, "oreRequired": "30-45", "notes": "Current meta - best end-game"}
+    },
+    "special_raven": {
+      "helmet": {"name": "Raven's Helmet", "healthBonus": "20%", "baseDefense": 50, "basePrice": 2000, "oreRequired": "Special", "notes": "Highest health boost in game"}
+    }
+  },
+  "variantDropRates": {
+    "Light": "1/1",
+    "Samurai": "1/2",
+    "Viking": "1/4",
+    "Knight": "1/1",
+    "Dark Knight": "1/2",
+    "Wolf": "1/4",
+    "Raven": "1/8"
+  },
+  "armorTraitsFromOres": [
+    {"ore": "Obsidian", "trait": "+30% extra defense", "requirement": "30% composition"},
+    {"ore": "Mythril", "trait": "+15% extra defense", "requirement": "30% composition"},
+    {"ore": "Darkryte", "trait": "15% chance to dodge attacks", "requirement": "30% composition"},
+    {"ore": "Lightite", "trait": "+15% movement speed", "requirement": "30% composition"},
+    {"ore": "Eye Ore", "trait": "+15% damage, -10% max HP", "requirement": "30% composition"},
+    {"ore": "Uranium", "trait": "5% max HP as AOE damage", "requirement": "30% composition"},
+    {"ore": "Graphite", "trait": "+5% defense, 20% chance for 12% damage reduction", "requirement": "30% composition"},
+    {"ore": "Etherealite", "trait": "+35% vitality", "requirement": "30% composition"},
+    {"ore": "Mosasaursit", "trait": "+65% health, -25% movement speed", "requirement": "Special"}
+  ],
+  "tierList": {
+    "SS": ["Wolf Armor Set - Best end-game tank"],
+    "S": ["Dark Knight Armor Set - Great for mid-to-late game"],
+    "A": ["Knight Armor Set - Good early heavy option", "Samurai Armor Set - Balanced choice"],
+    "B": ["Viking Armor Set - Alternative medium", "Light Armor - For speed builds"],
+    "C": ["Basic armor pieces without traits"]
+  },
+  "bestRecipes": {
+    "earlyGame": {
+      "description": "For Stonewake's Cross and early quests",
+      "recommendation": "Knight Armor Set (Helmet + Chestplate + Leggings)",
+      "ores": "Use any basic ores like Copper, Iron, Silver"
+    },
+    "midGame": {
+      "description": "For Forgotten Kingdom quests",
+      "recommendation": "Dark Knight Armor Set",
+      "ores": "Mix mid-tier ores: Cobalt, Titanium, Diamond, Sapphire"
+    },
+    "lateGame": {
+      "description": "For Frostspire Expanse and The Peak",
+      "recommendation": "Wolf Armor Set with 500+ defense",
+      "ores": "Best ores for traits and multipliers",
+      "exampleRecipes": {
+        "tankBuild": "Darkryte + Obsidian (30% defense boost + dodge)",
+        "balancedBuild": "Mythril + Lightite (defense + movement speed)",
+        "damageBuild": "Eye Ore + Rivalite (+15% damage, +20% crit)"
+      }
+    }
+  }
+}

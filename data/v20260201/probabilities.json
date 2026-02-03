@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "version": "v20260201",
+    "source": "bloxinformer.com, theforgecalculator.info, community testing",
+    "lastUpdated": "2026-02-01",
+    "notes": "Probability tables derived from game mechanics analysis. Actual results may vary due to RNG."
+  },
+  "forgingRules": {
+    "oreCountLimits": {
+      "weapons": {"min": 3, "max": 51},
+      "armor": {"min": 3, "max": 45}
+    },
+    "maxOreTypes": 4,
+    "qualityLevels": 10,
+    "masterworkBonus": "100% quality = maximum possible stats"
+  },
+  "multiplierCalculation": {
+    "formula": "Average Multiplier = Sum of all ore multipliers / Total ore count",
+    "example": {
+      "ores": ["Eye Ore x5 (4.0x)", "Mythril x5 (3.5x)"],
+      "calculation": "(4.0*5 + 3.5*5) / 10 = 3.75x average"
+    },
+    "materialNameRule": "Based on ore with highest quantity. If tied, based on highest multiplier ore."
+  },
+  "valueCalculation": {
+    "formula": "Value = Base Value × Ore Multiplier × Rarity Multiplier × Rare Ore Multiplier",
+    "weaponRarityMultipliers": {
+      "1/1": 1.0,
+      "1/2": 1.05,
+      "1/4": 1.1,
+      "1/8": 1.15,
+      "1/16": 1.2
+    },
+    "armorRarityMultipliers": {
+      "Light": 1.0,
+      "Samurai": 1.1,
+      "Viking": 1.2,
+      "Knight": 1.0,
+      "Dark Knight": 1.2,
+      "Wolf": 1.3,
+      "Raven": 1.3
+    },
+    "rareOreMultiplier": {
+      "value": 1.25,
+      "condition": "Applied when using Legendary+ ore from Forgotten Kingdom or any Frostspire Expanse ore"
+    }
+  },
+  "traitActivation": {
+    "minimumThreshold": 0.10,
+    "optimalThreshold": 0.30,
+    "scaling": "Linear between 10% and 30%",
+    "examples": [
+      {"orePercent": 10, "effectStrength": "Minimum"},
+      {"orePercent": 20, "effectStrength": "50% of maximum"},
+      {"orePercent": 30, "effectStrength": "Maximum (optimal)"},
+      {"orePercent": 50, "effectStrength": "Maximum (redundant beyond 30%)"}
+    ]
+  },
+  "weaponProbabilityByOreCount": {
+    "3-5": {"Dagger": 72, "Gauntlet": 20, "Other": 8},
+    "6-8": {"Dagger": 50, "Gauntlet": 30, "Straight Sword": 15, "Other": 5},
+    "9-11": {"Gauntlet": 35, "Katana": 40, "Straight Sword": 15, "Great Sword": 10},
+    "12-14": {"Katana": 72, "Great Sword": 22, "Straight Sword": 3, "Other": 3},
+    "15-20": {"Great Sword": 45, "Katana": 30, "Axe": 15, "Mace": 10},
+    "21-25": {"Great Sword": 40, "Axe": 30, "Mace": 20, "Spear": 10},
+    "26-30": {"Axe": 35, "Mace": 30, "Spear": 20, "Colossal": 15},
+    "31-40": {"Colossal": 40, "Great Axe": 30, "Mace": 20, "Spear": 10},
+    "41-51": {"Colossal": 50, "Great Axe": 35, "Heavy Weapons": 15}
+  },
+  "armorProbabilityByOreCount": {
+    "3-10": {"Light Armor": 70, "Medium Armor": 25, "Heavy Armor": 5},
+    "11-20": {"Light Armor": 30, "Medium Armor": 50, "Heavy Armor": 20},
+    "21-30": {"Light Armor": 10, "Medium Armor": 40, "Heavy Armor": 50},
+    "31-45": {"Light Armor": 5, "Medium Armor": 25, "Heavy Armor": 70}
+  },
+  "dpsCalculation": {
+    "formula": "DPS = (Base Damage × Ore Multiplier × Quality%) / Attack Speed",
+    "example": {
+      "weapon": "Dragon Slayer",
+      "baseDamage": 24,
+      "oreMultiplier": 5.0,
+      "quality": 1.0,
+      "attackSpeed": 1.4,
+      "dps": "(24 × 5.0 × 1.0) / 1.4 = 85.7 DPS"
+    }
+  },
+  "optimalOreCounts": {
+    "weaponTargets": {
+      "Dagger": {"optimal": 3, "range": "3-5"},
+      "Gauntlet": {"optimal": 6, "range": "3-11"},
+      "Straight Sword": {"optimal": 8, "range": "5-15"},
+      "Katana": {"optimal": 12, "range": "9-14", "notes": "72% chance at 12 ores"},
+      "Great Sword": {"optimal": 18, "range": "12-25"},
+      "Axe": {"optimal": 25, "range": "20-30"},
+      "Mace": {"optimal": 25, "range": "20-30"},
+      "Spear": {"optimal": 28, "range": "25-35"},
+      "Colossal": {"optimal": 45, "range": "35-51", "notes": "Best for Dragon Slayer"},
+      "Great Axe": {"optimal": 40, "range": "35-51"}
+    },
+    "armorTargets": {
+      "Light Armor": {"optimal": 5, "range": "3-10"},
+      "Medium Armor": {"optimal": 15, "range": "10-25"},
+      "Heavy Armor": {"optimal": 35, "range": "25-45"}
+    }
+  },
+  "recommendedRecipes": {
+    "highDpsKatana": {
+      "ores": ["Eye Ore x4", "Mythril x4", "Lightite x4"],
+      "total": 12,
+      "expectedMultiplier": 3.67,
+      "weaponChance": "72% Katana",
+      "traits": "Lightite weapon damage bonus at 33%"
+    },
+    "tankHeavyArmor": {
+      "ores": ["Darkryte x12", "Obsidian x12", "Mythril x11"],
+      "total": 35,
+      "expectedMultiplier": 4.5,
+      "armorChance": "70% Heavy Armor",
+      "traits": "Darkryte defense bonus, Obsidian defense bonus at 34% each"
+    },
+    "dragonSlayerAttempt": {
+      "ores": ["Arcane Crystal x15", "Demonite x15", "Darkryte x15", "Eye Ore x6"],
+      "total": 51,
+      "expectedMultiplier": 5.5,
+      "weaponChance": "50% Colossal",
+      "variantChance": "1/16 Dragon Slayer within Colossal"
+    },
+    "budgetStarterSword": {
+      "ores": ["Silver x5", "Gold x5", "Platinum x5"],
+      "total": 15,
+      "expectedMultiplier": 1.5,
+      "weaponChance": "~40% Great Sword",
+      "notes": "Good for early game progression"
+    }
+  },
+  "probabilityNotes": [
+    "Probabilities shown are game's actual rates, not guarantees",
+    "80% probability means 20% chance of different outcome",
+    "Variant drops use normalized probabilities (1/1 and 1/4 = 80% and 20%)",
+    "Calculator assumes 100% quality (Masterwork) forge results",
+    "Actual in-game results vary based on mini-game performance",
+    "Some ores have hidden properties (e.g., Uranium has hidden value multiplier)"
+  ]
+}
