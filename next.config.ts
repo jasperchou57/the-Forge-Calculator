@@ -1,12 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Skip lint and type checking during build (already checked locally)
+  // Next.js built-in lint runner is deprecated; run ESLint via `npm run lint` instead.
   eslint: {
     ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
 };
 

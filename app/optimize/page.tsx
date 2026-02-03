@@ -41,7 +41,7 @@ const OptimizerPage = () => {
 
     const applyToCalculator = (combo: SelectedOre[]) => {
         const slugs = combo.map(s => `${s.ore.slug}:${s.quantity}`).join(',');
-        router.push(`/?ores=${slugs}`);
+        router.push(`/?mode=weapon&ores=${slugs}`);
     };
 
     return (

@@ -48,6 +48,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: `${ore.name} Stats, Location & Best Recipes - The Forge Calculator`,
         description: `Everything about ${ore.name} in The Forge. Rarity: ${ore.rarity}, Multiplier: ${ore.multiplier}x. Found in ${ore.location}. Check best crafting combinations.`,
+        alternates: {
+            canonical: `/ores/${slug}`,
+        },
     };
 }
 
@@ -103,7 +106,7 @@ export default async function OreDetailPage({ params }: PageProps) {
 
                                 <div className="flex gap-4 pt-4">
                                     <Button asChild icon={<Sparkles className="w-4 h-4" />}>
-                                        <Link href={`/?ores=${ore.slug},${ore.slug},${ore.slug}`}>
+                                        <Link href={`/?mode=weapon&ores=${ore.slug}:3`}>
                                             Simulate with {ore.name}
                                         </Link>
                                     </Button>
@@ -176,7 +179,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                                     </div>
                                     <div className="text-right">
                                         <div className="font-bold">{(ore.multiplier).toFixed(2)}x Power</div>
-                                        <Link href={`/?ores=${ore.slug},${ore.slug},${ore.slug}`} className="text-xs text-accent-blue hover:underline">
+                                        <Link href={`/?mode=weapon&ores=${ore.slug}:3`} className="text-xs text-accent-blue hover:underline">
                                             Load Recipe &rarr;
                                         </Link>
                                     </div>

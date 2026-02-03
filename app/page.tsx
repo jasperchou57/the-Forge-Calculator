@@ -1,10 +1,19 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import CalculatorDemo from '@/components/Landing/CalculatorDemo';
 import Card from '@/components/UI/Card';
 import Button from '@/components/UI/Button';
+
+const SITE_URL = 'https://www.forgeore.com';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
 import {
   Calculator,
   Settings,
@@ -71,7 +80,7 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "ForgeCalc - The Forge Calculator",
-            "url": "https://forgecalc.com",
+            "url": SITE_URL,
             "description": "Calculate forging probabilities for The Forge Roblox game",
             "applicationCategory": "GameApplication",
             "operatingSystem": "Web Browser",

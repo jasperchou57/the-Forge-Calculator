@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useEffect, useMemo, useRef, useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
@@ -54,26 +55,168 @@ function toOre(raw: OreDataRaw): Ore {
     };
 }
 
-// Main calculator component - simplified without URL sync
+const SITE_URL = 'https://www.forgeore.com';
+
+const ALL_ORES = ORES_DATA.map(toOre);
+const ORE_BY_SLUG = new Map<string, Ore>(ALL_ORES.map((o) => [o.slug, o]));
+
+type CraftingMode = 'weapon' | 'armor';
+
+function encodeOresParam(selection: SelectedOre[]): string {
+    const bySlug = new Map<string, number>();
+
+    for (const item of selection) {
+        const slug = item.ore.slug;
+        const qty = Math.max(0, Math.floor(item.quantity));
+        if (!slug || qty <= 0) continue;
+
+        bySlug.set(slug, (bySlug.get(slug) || 0) + qty);
+    }
+
+    return [...bySlug.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([slug, qty]) => `${encodeURIComponent(slug)}:${qty}`)
+        .join(',');
+}
+
+function parseOresParam(oresParam: string | null): Array<{ slug: string; qty: number }> {
+    if (!oresParam) return [];
+
+    return oresParam
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .map((part) => {
+            const [rawSlug, rawQty] = part.split(':');
+            const slug = decodeURIComponent(rawSlug || '').trim();
+
+            // Backwards compatible: "slug" means quantity 1
+            const qtyParsed = rawQty === undefined ? 1 : parseInt(rawQty, 10);
+            const qty = Number.isFinite(qtyParsed) && qtyParsed > 0 ? qtyParsed : 1;
+
+            return { slug, qty };
+        });
+}
+
+function trimSelectionToMaxTotal(selection: SelectedOre[], maxTotal: number): SelectedOre[] {
+    const next = selection
+        .map((s) => ({ ...s, quantity: Math.floor(s.quantity) }))
+        .filter((s) => s.quantity > 0);
+
+    let total = next.reduce((sum, s) => sum + s.quantity, 0);
+    if (total <= maxTotal) return next;
+
+    let overflow = total - maxTotal;
+
+    for (let i = next.length - 1; i >= 0 && overflow > 0; i--) {
+        const reduceBy = Math.min(overflow, next[i].quantity);
+        next[i].quantity -= reduceBy;
+        overflow -= reduceBy;
+
+        if (next[i].quantity <= 0) {
+            next.splice(i, 1);
+        }
+    }
+
+    return next;
+}
+
+// Main calculator component with URL sync + shareable recipes
 const CalculatorDemoInner: React.FC = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const hasInitializedFromUrl = useRef(false);
+    const skipNextUrlSync = useRef(false);
+
     // State
     const [selectedOres, setSelectedOres] = useState<SelectedOre[]>([]);
     const [isCopied, setIsCopied] = useState(false);
     const [activeWorld, setActiveWorld] = useState<'W1/W2' | 'W3'>('W1/W2');
-    const [craftingMode, setCraftingMode] = useState<'weapon' | 'armor'>('weapon');
+    const [craftingMode, setCraftingMode] = useState<CraftingMode>('weapon');
     const [searchTerm, setSearchTerm] = useState('');
+
+    const maxOres = craftingMode === 'weapon' ? 51 : 45;
+
+    // Initialize from URL (?mode=weapon|armor&ores=slug:qty,slug:qty)
+    useEffect(() => {
+        if (hasInitializedFromUrl.current) return;
+
+        const modeParam = searchParams.get('mode');
+        const initialMode: CraftingMode = modeParam === 'armor' ? 'armor' : 'weapon';
+        setCraftingMode(initialMode);
+
+        const parsed = parseOresParam(searchParams.get('ores'));
+        if (parsed.length > 0) {
+            const selection: SelectedOre[] = [];
+
+            for (const { slug, qty } of parsed) {
+                const ore = ORE_BY_SLUG.get(slug);
+                if (!ore) continue;
+
+                const existing = selection.find((s) => s.ore.slug === ore.slug);
+                if (existing) {
+                    existing.quantity += qty;
+                } else if (selection.length < 4) {
+                    selection.push({ ore, quantity: qty });
+                }
+            }
+
+            const clamped = trimSelectionToMaxTotal(selection, initialMode === 'weapon' ? 51 : 45);
+            setSelectedOres(clamped);
+        }
+
+        hasInitializedFromUrl.current = true;
+        skipNextUrlSync.current = true;
+    }, [searchParams]);
+
+    // Clamp selection when switching crafting mode (weapon max 51, armor max 45)
+    useEffect(() => {
+        setSelectedOres((prev) => {
+            const total = prev.reduce((sum, s) => sum + s.quantity, 0);
+            if (total <= maxOres) return prev;
+            return trimSelectionToMaxTotal(prev, maxOres);
+        });
+    }, [maxOres]);
+
+    // Keep URL in sync for shareable recipes
+    useEffect(() => {
+        if (!hasInitializedFromUrl.current) return;
+        if (skipNextUrlSync.current) {
+            skipNextUrlSync.current = false;
+            return;
+        }
+
+        const desiredMode = craftingMode;
+        const desiredOres = encodeOresParam(selectedOres);
+
+        const currentMode = searchParams.get('mode') || 'weapon';
+        const currentOres = searchParams.get('ores') || '';
+
+        if (currentMode === desiredMode && currentOres === desiredOres) {
+            return;
+        }
+
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('mode', desiredMode);
+        if (desiredOres) params.set('ores', desiredOres);
+        else params.delete('ores');
+
+        const href = `/?${params.toString()}`;
+        router.replace(href, { scroll: false });
+    }, [craftingMode, selectedOres, router, searchParams]);
 
     // Filter ores by world and search
     const filteredOres = useMemo(() => {
         const worldLocations = WORLD_GROUPS[activeWorld];
-        return ORES_DATA
-            .filter(ore => worldLocations.includes(ore.location))
-            .filter(ore => 
-                searchTerm === '' || 
-                ore.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                ore.rarity.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map(toOre);
+
+        return ALL_ORES
+            .filter((ore) => worldLocations.includes(ore.location))
+            .filter(
+                (ore) =>
+                    searchTerm === '' ||
+                    ore.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    ore.rarity.toLowerCase().includes(searchTerm.toLowerCase())
+            );
     }, [activeWorld, searchTerm]);
 
     // Real-time calculation with error handling
@@ -100,19 +243,22 @@ const CalculatorDemoInner: React.FC = () => {
 
     // Handlers
     const addOre = (ore: Ore) => {
-        const existing = selectedOres.find(s => s.ore.slug === ore.slug);
+        // Enforce total ore cap for the current crafting mode
+        if (totalOres >= maxOres) return;
+
+        const existing = selectedOres.find((s) => s.ore.slug === ore.slug);
         if (existing) {
-            // Increase quantity
-            setSelectedOres(selectedOres.map(s => 
-                s.ore.slug === ore.slug 
-                    ? { ...s, quantity: s.quantity + 1 }
-                    : s
-            ));
-        } else {
-            // Add new ore (max 4 types)
-            if (selectedOres.length < 4) {
-                setSelectedOres([...selectedOres, { ore, quantity: 1 }]);
-            }
+            setSelectedOres(
+                selectedOres.map((s) =>
+                    s.ore.slug === ore.slug ? { ...s, quantity: s.quantity + 1 } : s
+                )
+            );
+            return;
+        }
+
+        // Add new ore (max 4 types)
+        if (selectedOres.length < 4) {
+            setSelectedOres([...selectedOres, { ore, quantity: 1 }]);
         }
     };
 
@@ -130,23 +276,72 @@ const CalculatorDemoInner: React.FC = () => {
     };
 
     const setOreQuantity = (slug: string, qty: number) => {
-        if (qty <= 0) {
-            setSelectedOres(selectedOres.filter(s => s.ore.slug !== slug));
-        } else {
-            setSelectedOres(selectedOres.map(s => 
-                s.ore.slug === slug ? { ...s, quantity: qty } : s
-            ));
+        const safeQty = Math.max(0, Math.floor(qty));
+        const existing = selectedOres.find((s) => s.ore.slug === slug);
+        if (!existing) return;
+
+        // Clamp so the total never exceeds the max for the current mode
+        const otherTotal = totalOres - existing.quantity;
+        const allowedForThisOre = Math.max(0, maxOres - otherTotal);
+        const clampedQty = Math.min(safeQty, allowedForThisOre);
+
+        if (clampedQty <= 0) {
+            setSelectedOres(selectedOres.filter((s) => s.ore.slug !== slug));
+            return;
         }
+
+        setSelectedOres(
+            selectedOres.map((s) => (s.ore.slug === slug ? { ...s, quantity: clampedQty } : s))
+        );
     };
 
-    const handleShare = () => {
-        navigator.clipboard.writeText(window.location.href);
+    const handleShare = async () => {
+        const oresParam = encodeOresParam(selectedOres);
+        const shareUrl = new URL(SITE_URL);
+        shareUrl.searchParams.set('mode', craftingMode);
+        if (oresParam) shareUrl.searchParams.set('ores', oresParam);
+
+        const oreText = selectedOres.length
+            ? selectedOres.map((s) => `${s.ore.name} x${s.quantity}`).join(', ')
+            : 'None';
+
+        let topLine: string | null = null;
+        if (craftingMode === 'weapon') {
+            const top = stats.weaponProbabilities?.[0];
+            if (top) topLine = `Top Chance: ${top.category} ${top.chance}%`;
+        } else {
+            const top = stats.armorProbabilities?.[0];
+            if (top) topLine = `Top Chance: ${top.class} ${top.chance}%`;
+        }
+
+        const traitText = stats.activeTraits?.length
+            ? stats.activeTraits.map((t) => `${t.traitName} ${t.percentage}%`).join(', ')
+            : 'None';
+
+        const modeLabel = craftingMode === 'weapon' ? 'Weapon' : 'Armor';
+        const text = [
+            `ForgeCalc — The Forge ${modeLabel} Recipe`,
+            `Ores (${totalOres}/${maxOres}): ${oreText}`,
+            topLine,
+            `Multiplier: ${stats.totalMultiplier.toFixed(2)}x • Stability: ${stats.stability.toFixed(1)}%`,
+            `Traits: ${traitText}`,
+            shareUrl.toString(),
+        ]
+            .filter(Boolean)
+            .join('\n');
+
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch {
+            // Fallback: copy the URL only
+            await navigator.clipboard.writeText(shareUrl.toString());
+        }
+
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
     };
 
     const totalOres = stats.totalOreCount;
-    const maxOres = craftingMode === 'weapon' ? 51 : 45;
     const canAddMore = selectedOres.length < 4 && totalOres < maxOres;
 
     // Chart data - safely handle empty arrays
@@ -219,7 +414,7 @@ const CalculatorDemoInner: React.FC = () => {
                             <button
                                 onClick={handleShare}
                                 className="text-xs flex items-center gap-1.5 text-accent-blue hover:text-accent-blue/80 transition-colors"
-                                title="Copy link to this setup"
+                                title="Copy share text + link"
                             >
                                 {isCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
                                 {isCopied ? 'COPIED' : 'SHARE'}
@@ -289,19 +484,21 @@ const CalculatorDemoInner: React.FC = () => {
                     {/* Ore Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2">
                         {filteredOres.map((ore) => {
-                            const selected = selectedOres.find(s => s.ore.slug === ore.slug);
+                            const selected = selectedOres.find((s) => s.ore.slug === ore.slug);
                             const isSelected = !!selected;
+                            const isDisabled = (!canAddMore && !isSelected) || (totalOres >= maxOres && isSelected);
+
                             return (
                                 <button
                                     key={ore.slug}
                                     onClick={() => addOre(ore)}
-                                    disabled={!canAddMore && !isSelected}
+                                    disabled={isDisabled}
                                     className={`
                                         relative p-3 rounded-lg border text-left transition-all duration-200 group
                                         ${isSelected
                                             ? 'bg-accent-blue/10 border-accent-blue/50 text-white'
                                             : 'bg-surface border-white/5 text-gray-400 hover:border-white/20 hover:bg-surface-highlight'}
-                                        ${!canAddMore && !isSelected ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
+                                        ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
                                     `}
                                 >
                                     {isSelected && (

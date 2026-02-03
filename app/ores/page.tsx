@@ -28,6 +28,9 @@ function getOreColor(rarity: string): string {
 export const metadata: Metadata = {
     title: 'All Ores List & Stats - The Forge Roblox Wiki',
     description: 'Complete database of all ores in The Forge Roblox. Compare multipliers, rarities, and traits for Iron, Gold, Mythril, Void Ore, and more.',
+    alternates: {
+        canonical: '/ores',
+    },
 };
 
 export default function OresHubPage() {
