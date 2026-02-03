@@ -115,8 +115,22 @@ const CalculatorDemoInner: React.FC = () => {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, [selectedOres, router, pathname, searchParams, isInitialized]);
 
-    // Real-time calculation
-    const stats = useMemo(() => calculateForgingStats(selectedOres), [selectedOres]);
+    // Real-time calculation with error handling
+    const stats = useMemo(() => {
+        try {
+            return calculateForgingStats(selectedOres);
+        } catch (error) {
+            console.error('Error calculating forging stats:', error);
+            return {
+                totalMultiplier: 0,
+                stability: 100,
+                totalOreCount: 0,
+                activeTraits: [],
+                weaponProbabilities: [],
+                armorProbabilities: []
+            };
+        }
+    }, [selectedOres]);
     const validationError = useMemo(
         () => validateOreSelection(selectedOres, craftingMode),
         [selectedOres, craftingMode]
@@ -380,13 +394,13 @@ const CalculatorDemoInner: React.FC = () => {
                             <div className="p-3 bg-black/40 rounded-lg border border-white/5">
                                 <div className="text-xs text-gray-500 font-mono mb-1">MULTIPLIER</div>
                                 <div className="text-xl font-mono text-white tabular-nums">
-                                    {stats.totalMultiplier.toFixed(2)}x
+                                    {(stats?.totalMultiplier ?? 0).toFixed(2)}x
                                 </div>
                             </div>
                             <div className="p-3 bg-black/40 rounded-lg border border-white/5">
                                 <div className="text-xs text-gray-500 font-mono mb-1">STABILITY</div>
-                                <div className={`text-xl font-mono tabular-nums ${stats.stability >= 70 ? 'text-success' : stats.stability >= 40 ? 'text-warning' : 'text-error'}`}>
-                                    {stats.stability}%
+                                <div className={`text-xl font-mono tabular-nums ${(stats?.stability ?? 100) >= 70 ? 'text-success' : (stats?.stability ?? 100) >= 40 ? 'text-warning' : 'text-error'}`}>
+                                    {stats?.stability ?? 100}%
                                 </div>
                             </div>
                             <div className="p-3 bg-black/40 rounded-lg border border-white/5">
@@ -436,8 +450,8 @@ const CalculatorDemoInner: React.FC = () => {
                         <div className="space-y-2">
                             <div className="text-xs text-gray-500 font-mono border-b border-white/5 pb-1">ACTIVE TRAITS</div>
 
-                            {stats.activeTraits.length > 0 ? (
-                                stats.activeTraits.map((t, idx) => (
+                            {(stats?.activeTraits?.length ?? 0) > 0 ? (
+                                (stats?.activeTraits ?? []).map((t, idx) => (
                                     <div key={idx} className="p-2 bg-black/40 rounded border border-white/5">
                                         <div className="flex justify-between items-center">
                                             <span className="text-sm text-white font-medium">{t.traitName}</span>
