@@ -77,14 +77,14 @@ const Footer: React.FC = () => {
             <h4 className="font-medium text-white mb-4 text-sm">Legal</h4>
             <ul className="space-y-2 text-sm text-gray-500">
               <li>
-                <span className="text-gray-600" title="Coming soon">
+                <Link href="/privacy" className="hover:text-gray-300 transition-colors">
                   Privacy Policy
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-gray-600" title="Coming soon">
+                <Link href="/terms" className="hover:text-gray-300 transition-colors">
                   Terms of Service
-                </span>
+                </Link>
               </li>
               <li>
                 <Link href="/#disclaimer" className="hover:text-gray-300 transition-colors">
@@ -92,9 +92,9 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <span className="text-gray-600" title="Coming soon">
+                <Link href="/cookies" className="hover:text-gray-300 transition-colors">
                   Cookie Settings
-                </span>
+                </Link>
               </li>
             </ul>
           </div>
