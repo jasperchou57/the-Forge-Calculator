@@ -23,6 +23,8 @@ interface OreData {
 const ORES_DATA = oresJSON.ores as OreData[];
 const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
 
+const SITE_URL = 'https://www.forgeore.com';
+
 // Helper to get color from rarity
 function getOreColor(rarity: string): string {
     return RARITY_COLORS[rarity] || '#6B7280';
@@ -45,11 +47,37 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const ore = ORES_DATA.find((o) => o.slug === slug);
     if (!ore) return { title: 'Ore Not Found' };
 
+    const title = `${ore.name} Stats, Location & Best Recipes - The Forge Calculator`;
+    const description = `Everything about ${ore.name} in The Forge. Rarity: ${ore.rarity}, Multiplier: ${ore.multiplier}x. Found in ${ore.location}. Check best crafting combinations.`;
+    const url = `${SITE_URL}/ores/${slug}`;
+
     return {
-        title: `${ore.name} Stats, Location & Best Recipes - The Forge Calculator`,
-        description: `Everything about ${ore.name} in The Forge. Rarity: ${ore.rarity}, Multiplier: ${ore.multiplier}x. Found in ${ore.location}. Check best crafting combinations.`,
+        title,
+        description,
         alternates: {
             canonical: `/ores/${slug}`,
+        },
+        openGraph: {
+            title,
+            description,
+            url,
+            siteName: 'ForgeCalc',
+            type: 'website',
+            locale: 'en_US',
+            images: [
+                {
+                    url: '/opengraph-image',
+                    width: 1200,
+                    height: 630,
+                    alt: 'ForgeCalc - The Forge Calculator',
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: ['/twitter-image'],
         },
     };
 }

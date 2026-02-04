@@ -39,11 +39,11 @@ const FAQ_DATA = [
   },
   { 
     q: "How accurate is this calculator?", 
-    a: "We use real probability tables extracted from game data. Our calculations are verified with 50+ unit tests and match in-game results with 99%+ accuracy." 
+    a: "We use probability tables extracted from game data sources and cover the core formulas with 50+ unit tests. Results are designed to closely match in-game behavior, but small differences can happen after patches." 
   },
   { 
     q: "How many ores does ForgeCalc support?", 
-    a: "ForgeCalc supports all 88 ores from The Forge, including World 1, World 2, and World 3 (The Peak) ores. We update within 24 hours of new game patches." 
+    a: "ForgeCalc supports all 88 ores from The Forge, including World 1, World 2, and World 3 (The Peak) ores. We aim to keep data up to date and refresh it after major patches." 
   },
   { 
     q: "How do trait activations work?", 
@@ -63,7 +63,7 @@ const FAQ_DATA = [
   },
   { 
     q: "How do I report incorrect data?", 
-    a: "If you find any calculation errors or outdated data, please report it through our feedback form. We typically fix issues within 24 hours." 
+    a: "If you find any calculation errors or outdated data, please report it through our feedback form. We review reports and ship fixes as soon as possible." 
   }
 ];
 
@@ -191,7 +191,7 @@ export default function Home() {
         </section>
 
         {/* H2: BEST FORGE SETUPS */}
-        <section className="border-t border-white/5 pt-12">
+        <section id="setups" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2">Best Forge Setups</h2>
             <p className="text-gray-500">Community-tested recipes for different playstyles</p>
@@ -246,7 +246,7 @@ export default function Home() {
         </section>
 
         {/* H2: HOW TO USE */}
-        <section className="border-t border-white/5 pt-12">
+        <section id="how-to-use" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2">How to Use ForgeCalc</h2>
             <p className="text-gray-500">Get accurate forging predictions in 5 simple steps</p>
@@ -272,7 +272,7 @@ export default function Home() {
         </section>
 
         {/* H2: FAQ */}
-        <section className="border-t border-white/5 pt-12">
+        <section id="faq" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2 flex items-center justify-center gap-2">
               <HelpCircle className="w-8 h-8 text-accent-blue" />
@@ -292,7 +292,7 @@ export default function Home() {
         </section>
 
         {/* H2: CHANGELOG */}
-        <section className="border-t border-white/5 pt-12">
+        <section id="changelog" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2 flex items-center justify-center gap-2">
               <Clock className="w-8 h-8 text-accent-blue" />

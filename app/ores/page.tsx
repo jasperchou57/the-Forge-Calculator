@@ -4,6 +4,11 @@ import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import { ArrowRight, Database } from 'lucide-react';
 
+const SITE_URL = 'https://www.forgeore.com';
+const TITLE = 'All Ores List & Stats - The Forge Roblox Wiki';
+const DESCRIPTION =
+    'Complete database of all ores in The Forge Roblox. Compare multipliers, rarities, and traits for Iron, Gold, Mythril, Void Ore, and more.';
+
 // Ore data with color mapping
 interface OreData {
     slug: string;
@@ -26,10 +31,32 @@ function getOreColor(rarity: string): string {
 }
 
 export const metadata: Metadata = {
-    title: 'All Ores List & Stats - The Forge Roblox Wiki',
-    description: 'Complete database of all ores in The Forge Roblox. Compare multipliers, rarities, and traits for Iron, Gold, Mythril, Void Ore, and more.',
+    title: TITLE,
+    description: DESCRIPTION,
     alternates: {
         canonical: '/ores',
+    },
+    openGraph: {
+        title: TITLE,
+        description: DESCRIPTION,
+        url: `${SITE_URL}/ores`,
+        siteName: 'ForgeCalc',
+        type: 'website',
+        locale: 'en_US',
+        images: [
+            {
+                url: '/opengraph-image',
+                width: 1200,
+                height: 630,
+                alt: 'ForgeCalc - The Forge Calculator',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: TITLE,
+        description: DESCRIPTION,
+        images: ['/twitter-image'],
     },
 };
 

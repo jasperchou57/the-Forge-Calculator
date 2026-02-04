@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Hammer } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -23,37 +24,85 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-medium text-white mb-4 text-sm">Tools</h4>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Forge Calculator</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Inventory Optimizer</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Reroll Odds</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Ore Chances <span className="text-xs text-accent-indigo ml-1">NEW</span></a></li>
+              <li>
+                <Link href="/#calculator" className="hover:text-accent-blue transition-colors">
+                  Forge Calculator
+                </Link>
+              </li>
+              <li>
+                <Link href="/optimize" className="hover:text-accent-blue transition-colors">
+                  Inventory Optimizer
+                </Link>
+              </li>
+              <li>
+                <span className="text-gray-600" title="Coming soon">
+                  Reroll Odds
+                </span>
+              </li>
+              <li>
+                <Link href="/ores" className="hover:text-accent-blue transition-colors">
+                  Ore Chances <span className="text-xs text-accent-indigo ml-1">NEW</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-medium text-white mb-4 text-sm">Resources</h4>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Mini Wiki</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Best Setups</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">API Docs</a></li>
-              <li><a href="#" className="hover:text-accent-blue transition-colors">Update Log</a></li>
+              <li>
+                <Link href="/ores" className="hover:text-accent-blue transition-colors">
+                  Mini Wiki
+                </Link>
+              </li>
+              <li>
+                <Link href="/#setups" className="hover:text-accent-blue transition-colors">
+                  Best Setups
+                </Link>
+              </li>
+              <li>
+                <span className="text-gray-600" title="Coming soon">
+                  API Docs
+                </span>
+              </li>
+              <li>
+                <Link href="/#changelog" className="hover:text-accent-blue transition-colors">
+                  Update Log
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-medium text-white mb-4 text-sm">Legal</h4>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-gray-300 transition-colors">Disclaimer</a></li>
-              <li><a href="#" className="hover:text-gray-300 transition-colors">Cookie Settings</a></li>
+              <li>
+                <span className="text-gray-600" title="Coming soon">
+                  Privacy Policy
+                </span>
+              </li>
+              <li>
+                <span className="text-gray-600" title="Coming soon">
+                  Terms of Service
+                </span>
+              </li>
+              <li>
+                <Link href="/#disclaimer" className="hover:text-gray-300 transition-colors">
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
+                <span className="text-gray-600" title="Coming soon">
+                  Cookie Settings
+                </span>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-gray-600 text-center md:text-left">
-            © 2024 Forge Calculator. Fan-made website. Not affiliated with Roblox or the game developers.
+          <p id="disclaimer" className="text-xs text-gray-600 text-center md:text-left">
+            © 2026 ForgeCalc. Fan-made website. Not affiliated with Roblox or the game developers.
           </p>
           <div className="flex gap-4">
              {/* Social icons placeholders */}
