@@ -121,6 +121,43 @@ function trimSelectionToMaxTotal(selection: SelectedOre[], maxTotal: number): Se
     return next;
 }
 
+async function safeCopyToClipboard(text: string): Promise<boolean> {
+    // Prefer the modern async clipboard API when available.
+    try {
+        if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch {
+        // Fall through to legacy copy.
+    }
+
+    // Legacy fallback (works in more browsers/permission configs).
+    try {
+        if (typeof document === 'undefined') return false;
+
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '0';
+        textarea.style.left = '0';
+        textarea.style.opacity = '0';
+        textarea.style.pointerEvents = 'none';
+
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        return ok;
+    } catch {
+        return false;
+    }
+}
+
 // Main calculator component with URL sync + shareable recipes
 const CalculatorDemoInner: React.FC = () => {
     const router = useRouter();
@@ -296,49 +333,56 @@ const CalculatorDemoInner: React.FC = () => {
     };
 
     const handleShare = async () => {
-        const oresParam = encodeOresParam(selectedOres);
-        const shareUrl = new URL(SITE_URL);
-        shareUrl.searchParams.set('mode', craftingMode);
-        if (oresParam) shareUrl.searchParams.set('ores', oresParam);
-
-        const oreText = selectedOres.length
-            ? selectedOres.map((s) => `${s.ore.name} x${s.quantity}`).join(', ')
-            : 'None';
-
-        let topLine: string | null = null;
-        if (craftingMode === 'weapon') {
-            const top = stats.weaponProbabilities?.[0];
-            if (top) topLine = `Top Chance: ${top.category} ${top.chance}%`;
-        } else {
-            const top = stats.armorProbabilities?.[0];
-            if (top) topLine = `Top Chance: ${top.class} ${top.chance}%`;
-        }
-
-        const traitText = stats.activeTraits?.length
-            ? stats.activeTraits.map((t) => `${t.traitName} ${t.percentage}%`).join(', ')
-            : 'None';
-
-        const modeLabel = craftingMode === 'weapon' ? 'Weapon' : 'Armor';
-        const text = [
-            `ForgeCalc — The Forge ${modeLabel} Recipe`,
-            `Ores (${totalOres}/${maxOres}): ${oreText}`,
-            topLine,
-            `Multiplier: ${stats.totalMultiplier.toFixed(2)}x • Stability: ${stats.stability.toFixed(1)}%`,
-            `Traits: ${traitText}`,
-            shareUrl.toString(),
-        ]
-            .filter(Boolean)
-            .join('\n');
-
         try {
-            await navigator.clipboard.writeText(text);
-        } catch {
-            // Fallback: copy the URL only
-            await navigator.clipboard.writeText(shareUrl.toString());
-        }
+            const oresParam = encodeOresParam(selectedOres);
+            const shareUrl = new URL(SITE_URL);
+            shareUrl.searchParams.set('mode', craftingMode);
+            if (oresParam) shareUrl.searchParams.set('ores', oresParam);
 
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000);
+            const oreText = selectedOres.length
+                ? selectedOres.map((s) => `${s.ore.name} x${s.quantity}`).join(', ')
+                : 'None';
+
+            let topLine: string | null = null;
+            if (craftingMode === 'weapon') {
+                const top = stats.weaponProbabilities?.[0];
+                if (top) topLine = `Top Chance: ${top.category} ${top.chance}%`;
+            } else {
+                const top = stats.armorProbabilities?.[0];
+                if (top) topLine = `Top Chance: ${top.class} ${top.chance}%`;
+            }
+
+            const traitText = stats.activeTraits?.length
+                ? stats.activeTraits.map((t) => `${t.traitName} ${t.percentage}%`).join(', ')
+                : 'None';
+
+            const modeLabel = craftingMode === 'weapon' ? 'Weapon' : 'Armor';
+            const text = [
+                `ForgeCalc — The Forge ${modeLabel} Recipe`,
+                `Ores (${totalOres}/${maxOres}): ${oreText}`,
+                topLine,
+                `Multiplier: ${stats.totalMultiplier.toFixed(2)}x • Stability: ${stats.stability.toFixed(1)}%`,
+                `Traits: ${traitText}`,
+                shareUrl.toString(),
+            ]
+                .filter(Boolean)
+                .join('\n');
+
+            // Clipboard can be blocked by browser permissions/policies. Never throw here.
+            const copied =
+                (await safeCopyToClipboard(text)) ||
+                (await safeCopyToClipboard(shareUrl.toString()));
+
+            if (!copied) {
+                // Last resort: show the URL so users can copy manually.
+                window.prompt('Copy this link:', shareUrl.toString());
+            }
+
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } catch (error) {
+            console.error('Share failed:', error);
+        }
     };
 
     const totalOres = stats.totalOreCount;
