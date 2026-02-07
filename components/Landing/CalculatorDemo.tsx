@@ -178,28 +178,32 @@ const CalculatorDemoInner: React.FC = () => {
     useEffect(() => {
         if (hasInitializedFromUrl.current) return;
 
-        const modeParam = searchParams.get('mode');
-        const initialMode: CraftingMode = modeParam === 'armor' ? 'armor' : 'weapon';
-        setCraftingMode(initialMode);
+        try {
+            const modeParam = searchParams.get('mode');
+            const initialMode: CraftingMode = modeParam === 'armor' ? 'armor' : 'weapon';
+            setCraftingMode(initialMode);
 
-        const parsed = parseOresParam(searchParams.get('ores'));
-        if (parsed.length > 0) {
-            const selection: SelectedOre[] = [];
+            const parsed = parseOresParam(searchParams.get('ores'));
+            if (parsed.length > 0) {
+                const selection: SelectedOre[] = [];
 
-            for (const { slug, qty } of parsed) {
-                const ore = ORE_BY_SLUG.get(slug);
-                if (!ore) continue;
+                for (const { slug, qty } of parsed) {
+                    const ore = ORE_BY_SLUG.get(slug);
+                    if (!ore) continue;
 
-                const existing = selection.find((s) => s.ore.slug === ore.slug);
-                if (existing) {
-                    existing.quantity += qty;
-                } else if (selection.length < 4) {
-                    selection.push({ ore, quantity: qty });
+                    const existing = selection.find((s) => s.ore.slug === ore.slug);
+                    if (existing) {
+                        existing.quantity += qty;
+                    } else if (selection.length < 4) {
+                        selection.push({ ore, quantity: qty });
+                    }
                 }
-            }
 
-            const clamped = trimSelectionToMaxTotal(selection, initialMode === 'weapon' ? 51 : 45);
-            setSelectedOres(clamped);
+                const clamped = trimSelectionToMaxTotal(selection, initialMode === 'weapon' ? 51 : 45);
+                setSelectedOres(clamped);
+            }
+        } catch (err) {
+            console.error('Failed to initialize from URL:', err);
         }
 
         hasInitializedFromUrl.current = true;
@@ -223,23 +227,27 @@ const CalculatorDemoInner: React.FC = () => {
             return;
         }
 
-        const desiredMode = craftingMode;
-        const desiredOres = encodeOresParam(selectedOres);
+        try {
+            const desiredMode = craftingMode;
+            const desiredOres = encodeOresParam(selectedOres);
 
-        const currentMode = searchParams.get('mode') || 'weapon';
-        const currentOres = searchParams.get('ores') || '';
+            const currentMode = searchParams.get('mode') || 'weapon';
+            const currentOres = searchParams.get('ores') || '';
 
-        if (currentMode === desiredMode && currentOres === desiredOres) {
-            return;
+            if (currentMode === desiredMode && currentOres === desiredOres) {
+                return;
+            }
+
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('mode', desiredMode);
+            if (desiredOres) params.set('ores', desiredOres);
+            else params.delete('ores');
+
+            const href = `/?${params.toString()}`;
+            router.replace(href, { scroll: false });
+        } catch (err) {
+            console.error('Failed to sync URL:', err);
         }
-
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('mode', desiredMode);
-        if (desiredOres) params.set('ores', desiredOres);
-        else params.delete('ores');
-
-        const href = `/?${params.toString()}`;
-        router.replace(href, { scroll: false });
     }, [craftingMode, selectedOres, router, searchParams]);
 
     // Filter ores by world and search

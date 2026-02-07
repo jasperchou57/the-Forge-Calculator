@@ -65,10 +65,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return null;
       }
 
+      // Destructure non-DOM-safe props so they are NOT forwarded via Slot/cloneElement
+      const { icon: _icon, ...domSafeProps } = props as Record<string, unknown>;
+
       return (
         <Slot
           className={classes}
-          {...(props as unknown as React.HTMLAttributes<HTMLElement>)}
+          {...(domSafeProps as unknown as React.HTMLAttributes<HTMLElement>)}
         >
           {children}
         </Slot>
