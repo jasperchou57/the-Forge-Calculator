@@ -96,6 +96,11 @@ const Footer: React.FC = () => {
                   Cookie Settings
                 </Link>
               </li>
+              <li>
+                <Link href="/support" className="hover:text-gray-300 transition-colors">
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
