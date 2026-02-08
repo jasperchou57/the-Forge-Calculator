@@ -135,7 +135,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                                 <div className="flex gap-4 pt-4">
                                     <Button asChild icon={<Sparkles className="w-4 h-4" />}>
                                         <Link href={`/?mode=weapon&ores=${ore.slug}:3`}>
-                                            Simulate with {ore.name}
+                                            Open in Crafting Calculator
                                         </Link>
                                     </Button>
                                     <Button variant="secondary" icon={<Share2 className="w-4 h-4" />}>
@@ -207,8 +207,8 @@ export default async function OreDetailPage({ params }: PageProps) {
                                     </div>
                                     <div className="text-right">
                                         <div className="font-bold">{(ore.multiplier).toFixed(2)}x Power</div>
-                                        <Link href={`/?mode=weapon&ores=${ore.slug}:3`} className="text-xs text-accent-blue hover:underline">
-                                            Load Recipe &rarr;
+                                    <Link href={`/?mode=weapon&ores=${ore.slug}:3`} className="text-xs text-accent-blue hover:underline">
+                                            Test in Forge Calculator &rarr;
                                         </Link>
                                     </div>
                                 </div>

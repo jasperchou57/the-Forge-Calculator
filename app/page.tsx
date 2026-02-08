@@ -64,6 +64,22 @@ const FAQ_DATA = [
   { 
     q: "How do I report incorrect data?", 
     a: "If you find any calculation errors or outdated data, please report it through our feedback form. We review reports and ship fixes as soon as possible." 
+  },
+  {
+    q: "Is this a Roblox The Forge calculator?",
+    a: "Yes! ForgeCalc is a dedicated calculator for the Roblox game The Forge. It supports all worlds and ores, helping you plan weapon and armor forges with real probability data."
+  },
+  {
+    q: "What is The Forge crafting test?",
+    a: "A crafting test lets you simulate forge outcomes before spending real ores. Use our calculator to run a crafting test — enter your ore mix and instantly see predicted weapon type, multiplier, and trait activations."
+  },
+  {
+    q: "Is ForgeCalc the same as TheForgeCalculator?",
+    a: "ForgeCalc (also known as Forge Calc) is an independent tool at forgeore.com. While there are several forge calculator sites, ForgeCalc is built with real game data, 50+ unit tests, and covers all 88 ores."
+  },
+  {
+    q: "Does ForgeCalc have an armor calculator?",
+    a: "Yes! ForgeCalc includes a full armor calculator. Switch to Armor mode to calculate defense stats, armor class probabilities (Light, Medium, Heavy), and trait activations for your ore combination."
   }
 ];
 
@@ -80,6 +96,7 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "ForgeCalc - The Forge Calculator",
+            "alternateName": ["Forge Calc", "TheForgeCalculator", "The Forge Crafting Calculator", "The Forge Roblox Calculator"],
             "url": SITE_URL,
             "description": "Calculate forging probabilities for The Forge Roblox game",
             "applicationCategory": "GameApplication",
@@ -130,6 +147,7 @@ export default function Home() {
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed">
             Calculate forging probabilities, optimize ore combinations, and predict weapon & armor stats for The Forge Roblox.
             <strong className="text-white"> Stop wasting rare ores</strong> – plan your crafts with real game data.
+            New to forging? Read our <Link href="/crafting" className="text-accent-blue hover:underline">crafting guide</Link>.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
