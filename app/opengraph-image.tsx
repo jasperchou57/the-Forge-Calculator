@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import oreData from '@/data/v20260201/ores.json';
 
 export const runtime = 'edge';
 
@@ -80,7 +81,7 @@ export default function OpengraphImage() {
             flexWrap: 'wrap',
           }}
         >
-          {['88 Ores', 'Weapon & Armor Traits', 'Shareable Recipes'].map((label) => (
+          {[`${oreData.ores.length} Ores`, 'Weapon & Armor Traits', 'Shareable Recipes'].map((label) => (
             <div
               key={label}
               style={{

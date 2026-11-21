@@ -14,7 +14,7 @@ import { RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle 
 const WORLD_GROUPS = {
     'W1/W2': ["Stonewake's Cross", 'Forgotten Kingdom', 'Goblin Cave', 'Enemy Drop'],
     W3: ['Frostspire Expanse', 'The Peak', 'Raven Cave', 'Boss Drop'],
-    W4: ['Tower of Hell', 'Void Cave']
+    W4: ['Bamboo Forest', 'Tower of Hell', 'Void Cave']
 };
 const WORLD_FILTERS = ['All', 'W1/W2', 'W3', 'W4'] as const;
 
