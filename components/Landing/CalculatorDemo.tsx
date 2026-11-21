@@ -349,11 +349,11 @@ const CalculatorDemoInner: React.FC = () => {
 
     return (
         <div className="w-full max-w-6xl mx-auto my-12">
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="grid items-stretch gap-6 lg:grid-cols-2">
                 {/* Left: Input Selection */}
-                <div className="flex-1 space-y-4">
+                <div className="flex min-w-0 flex-col gap-4">
                     {/* Mode Toggle */}
-                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                    <div className="flex flex-wrap items-center gap-3">
                         <div className="flex bg-surface rounded-lg p-1 border border-white/5">
                             <button
                                 aria-pressed={craftingMode === 'weapon'}
@@ -399,7 +399,7 @@ const CalculatorDemoInner: React.FC = () => {
                     </div>
 
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between">
                         <h3 className="text-white font-medium flex items-center gap-2">
                             <span className="w-1 h-5 bg-accent-blue rounded-full"></span>
                             Material Selection
@@ -481,7 +481,7 @@ const CalculatorDemoInner: React.FC = () => {
                     )}
 
                     {/* Ore Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2">
+                    <div className="grid max-h-[400px] grid-cols-2 content-start gap-2 overflow-y-auto pr-2 md:grid-cols-3 lg:h-[400px] lg:max-h-none lg:grow">
                         {filteredOres.length === 0 && <p className="col-span-full p-3 text-sm text-gray-400">No matching ores in this filter.</p>}
                         {filteredOres.map((ore) => {
                             const selected = selectedOres.find((s) => s.ore.slug === ore.slug);
@@ -527,38 +527,38 @@ const CalculatorDemoInner: React.FC = () => {
                 </div>
 
                 {/* Right: Output / Dashboard */}
-                <Card className="flex-1 p-0 flex flex-col bg-[#0B0C0E] max-h-[700px]" glow>
+                <Card className="flex min-w-0 flex-col bg-[#0B0C0E]" glow>
                     {/* Header */}
-                    <div className="p-4 border-b border-white/10 flex justify-between items-center bg-surface/50">
-                        <h3 className="font-mono text-sm text-gray-300 flex items-center gap-2">
+                    <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-surface/50 px-5 py-4 sm:px-6">
+                        <h3 className="flex items-center gap-2 text-base font-semibold text-gray-100">
                             <Zap className="w-4 h-4 text-warning" />
-                            {craftingMode === 'weapon' ? 'WEAPON' : 'ARMOR'} SIMULATION
+                            {craftingMode === 'weapon' ? 'Weapon' : 'Armor'} simulation
                         </h3>
                         <Badge variant={totalOres >= 3 ? "success" : "neutral"} pulsing={totalOres >= 3}>
                             {totalOres >= 3 ? "READY" : "IDLE"}
                         </Badge>
                     </div>
 
-                    <div className="p-6 flex-1 space-y-6 overflow-y-auto">
+                    <div className="flex flex-1 flex-col gap-5 p-5 sm:gap-6 sm:p-6 lg:justify-evenly">
                         {/* Material Name */}
                         {totalOres >= 3 && (
-                            <div className="text-center p-3 bg-black/40 rounded-lg border border-white/5">
-                                <div className="text-xs text-gray-500 font-mono mb-1">MATERIAL NAME</div>
-                                <div className="text-lg font-bold text-white">{materialName} {craftingMode === 'weapon' ? 'Weapon' : 'Armor'}</div>
+                            <div className="rounded-lg border border-white/5 bg-black/40 px-4 py-4 text-center">
+                                <div className="mb-1 text-sm text-gray-400">Material name</div>
+                                <div className="break-words text-xl font-semibold leading-7 text-white">{materialName} {craftingMode === 'weapon' ? 'Weapon' : 'Armor'}</div>
                             </div>
                         )}
 
                         {/* KPI Row */}
                         <div className="grid grid-cols-2 gap-3">
-                            <div className="p-3 bg-black/40 rounded-lg border border-white/5">
-                                <div className="text-xs text-gray-500 font-mono mb-1">MULTIPLIER</div>
-                                <div className="text-xl font-mono text-white tabular-nums">
+                            <div className="rounded-lg border border-white/5 bg-black/40 px-4 py-4">
+                                <div className="mb-1 text-sm text-gray-400">Multiplier</div>
+                                <div className="text-2xl font-semibold leading-8 text-white tabular-nums">
                                     {totalOres >= 3 ? `${stats.totalMultiplier.toFixed(2)}x` : '—'}
                                 </div>
                             </div>
-                            <div className="p-3 bg-black/40 rounded-lg border border-white/5">
-                                <div className="text-xs text-gray-500 font-mono mb-1">TOTAL ORES</div>
-                                <div className="text-xl font-mono text-white tabular-nums">
+                            <div className="rounded-lg border border-white/5 bg-black/40 px-4 py-4">
+                                <div className="mb-1 text-sm text-gray-400">Total ores</div>
+                                <div className="text-2xl font-semibold leading-8 text-white tabular-nums">
                                     {totalOres}
                                 </div>
                             </div>
@@ -572,31 +572,31 @@ const CalculatorDemoInner: React.FC = () => {
                         )}
 
                         {/* Traits Analysis */}
-                        <div className="space-y-2">
-                            <div className="text-xs text-gray-500 font-mono border-b border-white/5 pb-1">ACTIVE TRAITS</div>
+                        <div className="space-y-3">
+                            <h4 className="text-base font-semibold text-gray-100">Active traits</h4>
 
                             {(stats?.activeTraits?.length ?? 0) > 0 ? (
                                 (stats?.activeTraits ?? []).map((t) => (
-                                    <div key={t.sourceOre} className="p-2 bg-black/40 rounded border border-white/5">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-white font-medium">{t.sourceOre}</span>
-                                            <span className="font-mono text-accent-blue tabular-nums">{Number(t.mixPercent.toFixed(1))}% of mix</span>
+                                    <div key={t.sourceOre} className="rounded-lg border border-white/5 bg-black/40 px-4 py-3">
+                                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                                            <span className="text-base font-semibold text-white">{t.sourceOre}</span>
+                                            <span className="whitespace-nowrap text-sm font-medium text-blue-300 tabular-nums">{Number(t.mixPercent.toFixed(1))}% of mix</span>
                                         </div>
-                                        <div className="text-xs text-gray-500 mt-1">
+                                        <div className="mt-1 text-sm leading-[21px] text-gray-300">
                                             {t.trait}
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-center py-4 text-xs text-gray-600 italic">
+                                <div className="rounded-lg border border-white/5 bg-black/40 px-4 py-3 text-sm leading-[21px] text-gray-400">
                                     {totalOres > 0 ? "No active traits for this mode. Use at least 3 ores and reach a 10% share with a matching trait ore." : "Select ores to see predictions"}
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="p-4 border-t border-white/10 bg-surface/50 flex gap-2">
-                        <Button variant="secondary" icon={<RefreshCw />} disabled={!selectedOres.length} onClick={() => setSelectedOres([])}>
+                    <div className="border-t border-white/10 bg-surface/50 px-5 py-4 sm:px-6">
+                        <Button variant="secondary" icon={<RefreshCw className="h-4 w-4" />} disabled={!selectedOres.length} onClick={() => setSelectedOres([])}>
                             Clear mix
                         </Button>
                     </div>

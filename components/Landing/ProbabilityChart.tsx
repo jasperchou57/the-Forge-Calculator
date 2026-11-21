@@ -6,12 +6,12 @@ interface ProbabilityChartProps {
 export default function ProbabilityChart({ title, data }: ProbabilityChartProps) {
   return (
     <figure>
-      <figcaption className="mb-3 text-sm font-semibold text-gray-300">{title}</figcaption>
-      <ul className="space-y-2">
+      <figcaption className="mb-2 text-base font-semibold text-gray-100">{title}</figcaption>
+      <ul>
         {data.map(({ name, prob, color }) => (
           <li
             key={name}
-            className="grid grid-cols-[min(43%,8rem)_minmax(0,1fr)_4ch] items-center gap-x-3 text-base leading-6"
+            className="grid min-h-9 grid-cols-[min(43%,8rem)_minmax(0,1fr)_4ch] items-center gap-x-3 text-base leading-6"
           >
             <span className="font-medium text-gray-100">{name}</span>
             <span aria-hidden="true" className="h-2.5 overflow-hidden rounded-full bg-white/10">
