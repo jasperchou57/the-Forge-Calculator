@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState, Suspense } from 'react';
-import dynamic from 'next/dynamic';
+import ProbabilityChart from './ProbabilityChart';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
@@ -10,12 +10,6 @@ import { CraftingMode, SelectedOre, Ore } from '@/types';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '@/lib/calculator';
 import { ALL_ORES, traitForMode } from '@/lib/ores';
 import { RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
-
-// Dynamically import Recharts to prevent SSR hydration mismatch
-const RechartsChart = dynamic(
-  () => import('./RechartsChart'),
-  { ssr: false, loading: () => <div className="h-44 w-full flex items-center justify-center text-gray-500 text-sm">Loading chart...</div> }
-);
 
 const WORLD_GROUPS = {
     'W1/W2': ["Stonewake's Cross", 'Forgotten Kingdom', 'Goblin Cave', 'Enemy Drop'],
@@ -570,11 +564,10 @@ const CalculatorDemoInner: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Chart Area - dynamically loaded to prevent SSR hydration errors */}
                         {probabilityData.length > 0 && (
-                            <RechartsChart 
-                                data={probabilityData} 
-                                title={craftingMode === 'weapon' ? 'ESTIMATED WEAPON TYPE CHANCES' : 'ESTIMATED ARMOR CLASS CHANCES'}
+                            <ProbabilityChart
+                                data={probabilityData}
+                                title={craftingMode === 'weapon' ? 'Estimated weapon type chances' : 'Estimated armor class chances'}
                             />
                         )}
 
