@@ -6,12 +6,12 @@ const SITE_URL = 'https://www.forgeore.com';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'ForgeCalc - The Forge Calculator | Roblox Forging Probability Tool',
-  description: 'Calculate forging probabilities, optimize ore combinations, and predict weapon/armor stats for The Forge Roblox. 88 ores, real probability tables, World 1-3 support. Free online calculator.',
+  description: 'Compare ore multipliers, weapon and armor traits, and estimated equipment category chances for your mix in Roblox The Forge.',
   keywords: ['The Forge Calculator', 'Roblox The Forge', 'forge calculator', 'forging probability', 'ore calculator', 'weapon stats', 'armor calculator', 'trait activation'],
   authors: [{ name: 'ForgeCalc' }],
   openGraph: {
     title: 'ForgeCalc - The Forge Calculator for Roblox',
-    description: 'Calculate forging probabilities and optimize ore combinations for The Forge Roblox game. Free tool with 88 ores and real game data.',
+    description: 'Compare ore multipliers, weapon and armor traits, and estimated equipment category chances for your mix in Roblox The Forge.',
     url: SITE_URL,
     siteName: 'ForgeCalc',
     type: 'website',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'ForgeCalc - The Forge Calculator',
-    description: 'Calculate forging probabilities for The Forge Roblox. 88 ores, real probability tables.',
+    description: 'Compare ore multipliers, weapon and armor traits, and estimated equipment category chances for your mix in Roblox The Forge.',
     images: ['/twitter-image'],
   },
   robots: {

@@ -1,26 +1,13 @@
 import React from 'react';
 import Header from '@/components/Layout/Header';
 import Button from '@/components/UI/Button';
+import { ALL_ORES as ORES_DATA } from '@/lib/ores';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, Share2, Sparkles, MapPin, Zap, TrendingUp } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-// Ore data with color mapping
-interface OreData {
-    slug: string;
-    name: string;
-    rarity: string;
-    chance: string;
-    multiplier: number;
-    price: number | null;
-    trait: string | null;
-    rocks: string[];
-    location: string;
-}
-
-const ORES_DATA = oresJSON.ores as OreData[];
 const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
 
 const SITE_URL = 'https://www.forgeore.com';
@@ -154,7 +141,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                             </div>
                             <div>
                                 <div className="text-xs text-gray-500 font-mono uppercase">Multiplier</div>
-                                <div className="text-2xl font-bold text-white">{ore.multiplier.toFixed(1)}x</div>
+                                <div className="text-2xl font-bold text-white">{ore.multiplier}x</div>
                             </div>
                         </div>
 

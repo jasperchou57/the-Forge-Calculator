@@ -18,11 +18,8 @@ import {
   Calculator,
   Settings,
   BookOpen,
-  Dices,
-  Target,
   ArrowRight,
   TrendingUp,
-  ShieldCheck,
   Clock,
   Gem,
   Swords,
@@ -33,53 +30,33 @@ import {
 
 // FAQ data for structured data
 const FAQ_DATA = [
-  { 
-    q: "What is The Forge Calculator?", 
-    a: "The Forge Calculator is a free online tool that calculates forging probabilities, predicts weapon and armor stats, and helps optimize ore combinations for the Roblox game The Forge." 
-  },
-  { 
-    q: "How accurate is this calculator?", 
-    a: "We use probability tables extracted from game data sources and cover the core formulas with 50+ unit tests. Results are designed to closely match in-game behavior, but small differences can happen after patches." 
-  },
-  { 
-    q: "How many ores does ForgeCalc support?", 
-    a: "ForgeCalc supports all 88 ores from The Forge, including World 1, World 2, and World 3 (The Peak) ores. We aim to keep data up to date and refresh it after major patches." 
-  },
-  { 
-    q: "How do trait activations work?", 
-    a: "Traits activate when an ore type reaches 10% of your total composition. At 30% or higher, the trait reaches 100% effectiveness. Between 10-30%, effectiveness scales linearly." 
-  },
-  { 
-    q: "Can I share my forge setup?", 
-    a: "Yes! Every ore combination generates a unique URL that you can share with friends or save for later. Just copy the URL from your browser." 
-  },
-  { 
-    q: "Is this an official Roblox tool?", 
-    a: "No, ForgeCalc is a fan-made community tool. We are not affiliated with Roblox Corporation or The Forge game developers." 
-  },
-  { 
-    q: "What's the difference between weapon and armor forging?", 
-    a: "Weapons use 3-51 ores and produce different weapon categories (Dagger, Katana, Great Sword, etc.). Armor uses 3-45 ores and produces Light, Medium, or Heavy armor." 
-  },
-  { 
-    q: "How do I report incorrect data?", 
-    a: "If you find any calculation errors or outdated data, please report it through our feedback form. We review reports and ship fixes as soon as possible." 
+  {
+    q: 'What does the ore multiplier tell me?',
+    a: 'The calculator averages the multiplier of every ore in your mix. For example, six Iron at 0.35× and six Gold at 0.65× give a 0.50× mix.'
   },
   {
-    q: "Is this a Roblox The Forge calculator?",
-    a: "Yes! ForgeCalc is a dedicated calculator for the Roblox game The Forge. It supports all worlds and ores, helping you plan weapon and armor forges with real probability data."
+    q: 'Which ores can I use?',
+    a: 'Search the 88 ores currently listed, or filter by world. World 4 coverage currently includes Galaxite and Vooite.'
   },
   {
-    q: "What is The Forge crafting test?",
-    a: "A crafting test lets you simulate forge outcomes before spending real ores. Use our calculator to run a crafting test — enter your ore mix and instantly see predicted weapon type, multiplier, and trait activations."
+    q: 'Why do traits change when I switch modes?',
+    a: 'Each ore can have weapon effects, armor effects, or effects shared by both. For example, Aetherit adds attack speed to a weapon and movement speed to armor.'
   },
   {
-    q: "Is ForgeCalc the same as TheForgeCalculator?",
-    a: "ForgeCalc (also known as Forge Calc) is an independent tool at forgeore.com. While there are several forge calculator sites, ForgeCalc is built with real game data, 50+ unit tests, and covers all 88 ores."
+    q: 'When does an ore trait activate?',
+    a: 'A matching ore must make up at least 10% of your mix. Most traits reach full strength at 30%. The percentage beside an active ore shows its share of the recipe.'
   },
   {
-    q: "Does ForgeCalc have an armor calculator?",
-    a: "Yes! ForgeCalc includes a full armor calculator. Switch to Armor mode to calculate defense stats, armor class probabilities (Light, Medium, Heavy), and trait activations for your ore combination."
+    q: 'Can I predict an exact item?',
+    a: 'The chart estimates weapon categories or armor classes from ore count. The estimates exclude forge location, specific item variants, and molds.'
+  },
+  {
+    q: 'How many ores can I enter?',
+    a: 'Use up to four different ore types. The calculator covers mixes of 3–51 ores in Weapon mode and 3–45 in Armor mode.'
+  },
+  {
+    q: 'How do I share a recipe?',
+    a: 'Choose Share to copy the ore quantities, mode, results, and a link that opens the same mix.'
   }
 ];
 
@@ -136,7 +113,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-accent-blue"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-blue"></span>
             </span>
-            Data v20260201 • 88 Ores • World 1-3 Support
+            88 ores in the calculator
           </div>
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-tight">
@@ -145,8 +122,7 @@ export default function Home() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed">
-            Calculate forging probabilities, optimize ore combinations, and predict weapon & armor stats for The Forge Roblox.
-            <strong className="text-white"> Stop wasting rare ores</strong> – plan your crafts with real game data.
+            Plan a weapon or armor forge in Roblox The Forge. Compare ore multipliers, see which traits your mix activates, and estimate your chances by equipment category.
             New to forging? Read our <Link href="/crafting" className="text-accent-blue hover:underline">crafting guide</Link>.
           </p>
 
@@ -164,7 +140,7 @@ export default function Home() {
         <section id="calculator" className="scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2">Forge Calculator</h2>
-            <p className="text-gray-500">Select ores, adjust quantities, and see real-time forging probabilities</p>
+            <p className="text-gray-500">Choose Weapon or Armor, then add at least three ores.</p>
           </div>
           <CalculatorDemo />
         </section>
@@ -178,11 +154,11 @@ export default function Home() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Ores Directory</h2>
-                <p className="text-sm text-gray-500">All 88 ores with stats & locations</p>
+                <p className="text-sm text-gray-500">Multipliers, traits and locations</p>
               </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              Browse complete ore data including multipliers, rarity, traits, and drop locations for World 1, World 2, and World 3.
+              Look up an ore before adding it to your mix. Each entry lists its multiplier, rarity and location.
             </p>
             <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
               <Link href="/ores">View All Ores</Link>
@@ -196,14 +172,14 @@ export default function Home() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Weapons & Armor</h2>
-                <p className="text-sm text-gray-500">42 weapons, 21 armor pieces</p>
+                <p className="text-sm text-gray-500">Weapon categories and armor classes</p>
               </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              Explore all weapon categories (Dagger, Katana, Great Sword, Colossal) and armor classes with DPS rankings.
+              Learn how ore count affects the equipment you can forge, how to use molds, and where to craft ores.
             </p>
             <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
-              <Link href="/optimize">Explore Equipment</Link>
+              <Link href="/crafting">Open Crafting Guide</Link>
             </Button>
           </Card>
         </section>
@@ -211,53 +187,53 @@ export default function Home() {
         {/* H2: BEST FORGE SETUPS */}
         <section id="setups" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-2">Best Forge Setups</h2>
-            <p className="text-gray-500">Community-tested recipes for different playstyles</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Example Ore Mixes</h2>
+            <p className="text-gray-500">Try these mixes to see how the calculator responds.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="p-6">
               <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-green-500" />
-                Beginner Setups
+                Compare multipliers
               </h3>
               <p className="text-sm text-gray-400 mb-4">
-                Low-cost recipes using common ores for early game progression. Perfect for World 1-2.
+                Start with 12 ores and change the proportions of Iron and Gold.
               </p>
               <ul className="text-xs text-gray-500 space-y-2">
-                <li>• Iron + Gold (12 ores) → Katana</li>
-                <li>• Silver + Platinum (15 ores) → Straight Sword</li>
-                <li>• Diamond + Ruby (20 ores) → Great Sword</li>
+                <li>• 8 Iron + 4 Gold → 0.45×</li>
+                <li>• 6 Iron + 6 Gold → 0.50×</li>
+                <li>• 4 Iron + 8 Gold → 0.55×</li>
               </ul>
             </Card>
 
             <Card className="p-6">
               <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <Zap className="w-5 h-5 text-yellow-500" />
-                DPS Meta Builds
+                Activate a weapon trait
               </h3>
               <p className="text-sm text-gray-400 mb-4">
-                Maximum damage output builds using trait synergies. For experienced players.
+                In Weapon mode, use Iron and Fireite to see when Burn appears.
               </p>
               <ul className="text-xs text-gray-500 space-y-2">
-                <li>• Eye Ore + Mythril + Lightite → Katana</li>
-                <li>• Darkryte + Arcane + Demonite → Colossal</li>
-                <li>• Iceite + Gargantuan → Heavy Weapon</li>
+                <li>• 11 Iron + 1 Fireite → below 10%</li>
+                <li>• 10 Iron + 2 Fireite → Burn active</li>
+                <li>• 8 Iron + 4 Fireite → above 30%</li>
               </ul>
             </Card>
 
             <Card className="p-6">
               <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
                 <ShieldIcon className="w-5 h-5 text-blue-500" />
-                Tank Armor Builds
+                Switch equipment modes
               </h3>
               <p className="text-sm text-gray-400 mb-4">
-                Maximum defense and survivability. Essential for The Peak boss fights.
+                Use 3 Aetherit and 7 Iron. Switch between Weapon and Armor with the same ores.
               </p>
               <ul className="text-xs text-gray-500 space-y-2">
-                <li>• Obsidian + Mythril (35 ores) → Heavy Armor</li>
-                <li>• Darkryte + Magmaite → Defense + Burn</li>
-                <li>• Sanctis + Velchire → Holy Tank</li>
+                <li>• Weapon → attack speed</li>
+                <li>• Armor → movement speed</li>
+                <li>• Aetherit share → 30% in either mode</li>
               </ul>
             </Card>
           </div>
@@ -267,15 +243,15 @@ export default function Home() {
         <section id="how-to-use" className="border-t border-white/5 pt-12 scroll-mt-24">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white mb-2">How to Use ForgeCalc</h2>
-            <p className="text-gray-500">Get accurate forging predictions in 5 simple steps</p>
+            <p className="text-gray-500">Build a mix and compare the results as you adjust it.</p>
           </div>
           
           <div className="grid md:grid-cols-5 gap-4">
             {[
-              { step: "1", title: "Select World", desc: "Choose W1/W2 or W3 to filter available ores" },
+              { step: "1", title: "Select World", desc: "Search all listed ores or narrow the list by world" },
               { step: "2", title: "Choose Mode", desc: "Switch between Weapon or Armor forging" },
               { step: "3", title: "Add Ores", desc: "Click ores and adjust quantities (3-51 for weapons)" },
-              { step: "4", title: "Check Traits", desc: "Ensure key ores reach 30% for max trait power" },
+              { step: "4", title: "Check Traits", desc: "Check which effects apply to your mode" },
               { step: "5", title: "Analyze & Share", desc: "Review probabilities and share your setup" }
             ].map((item) => (
               <div key={item.step} className="text-center p-4 bg-surface/30 rounded-xl border border-white/5">
@@ -321,9 +297,10 @@ export default function Home() {
           
           <div className="max-w-2xl mx-auto space-y-6">
             {[
-              { ver: "v20260201", date: "Feb 1, 2026", changes: ["Added all 88 ores with complete data", "Implemented 50+ unit tests for calculation accuracy", "Added World 1/2 vs World 3 ore filtering", "URL sharing for forge setups"] },
+              { ver: "v20261121", date: "Nov 21, 2026", changes: ["Updated 43 ore multipliers", "Added World 4 filtering for Galaxite and Vooite", "Separated weapon and armor traits in recipe results"] },
+              { ver: "v20260201", date: "Feb 1, 2026", changes: ["Listed 88 ores", "Implemented 50+ unit tests for calculation accuracy", "Added World 1/2 vs World 3 ore filtering", "URL sharing for forge setups"] },
               { ver: "v20260115", date: "Jan 15, 2026", changes: ["Added Frostspire Expanse ores", "Fixed trait activation threshold calculation", "Mobile UI improvements"] },
-              { ver: "v20260101", date: "Jan 1, 2026", changes: ["Initial release with core calculator", "42 weapons, 21 armor pieces", "Basic probability tables"] }
+              { ver: "v20260101", date: "Jan 1, 2026", changes: ["Initial release with core calculator", "Weapon categories and armor classes", "Basic probability tables"] }
             ].map((log, i) => (
               <div key={i} className="flex gap-4 p-4 bg-surface/30 rounded-xl border border-white/5">
                 <div className="text-right min-w-[100px]">
@@ -344,9 +321,9 @@ export default function Home() {
 
         {/* CTA SECTION */}
         <section className="py-16 text-center bg-gradient-to-b from-transparent via-accent-blue/5 to-transparent rounded-3xl">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Forge the Ultimate Gear?</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Try your own ore mix</h2>
           <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-            Join thousands of players using ForgeCalc to optimize their crafting. No signup required – start calculating now.
+            Pick ores from your inventory and compare your weapon and armor options.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" icon={<Calculator className="w-5 h-5" />}>

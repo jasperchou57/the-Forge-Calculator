@@ -6,10 +6,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
-import { SelectedOre, Ore } from '@/types';
+import { CraftingMode, SelectedOre, Ore } from '@/types';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '@/lib/calculator';
-import oresJSON from '@/data/v20260201/ores.json';
-import { Sparkles, RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
+import { ALL_ORES, traitForMode } from '@/lib/ores';
+import { RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
 
 // Dynamically import Recharts to prevent SSR hydration mismatch
 const RechartsChart = dynamic(
@@ -17,50 +17,16 @@ const RechartsChart = dynamic(
   { ssr: false, loading: () => <div className="h-44 w-full flex items-center justify-center text-gray-500 text-sm">Loading chart...</div> }
 );
 
-// Type assertion for ore data
-interface OreDataRaw {
-    slug: string;
-    name: string;
-    rarity: string;
-    chance: string;
-    multiplier: number;
-    price: number | null;
-    trait: string | null;
-    rocks: string[];
-    location: string;
-}
-
-const ORES_DATA = oresJSON.ores as OreDataRaw[];
-const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
-
-// World groupings
-const WORLD_GROUPS: Record<string, string[]> = {
-    'W1/W2': ["Stonewake's Cross", "Forgotten Kingdom", "Goblin Cave", "Enemy Drop"],
-    'W3': ["Frostspire Expanse", "The Peak", "Boss Drop"]
+const WORLD_GROUPS = {
+    'W1/W2': ["Stonewake's Cross", 'Forgotten Kingdom', 'Goblin Cave', 'Enemy Drop'],
+    W3: ['Frostspire Expanse', 'The Peak', 'Raven Cave', 'Boss Drop'],
+    W4: ['Tower of Hell', 'Void Cave']
 };
+const WORLD_FILTERS = ['All', 'W1/W2', 'W3', 'W4'] as const;
 
-// Convert raw data to Ore type
-function toOre(raw: OreDataRaw): Ore {
-    return {
-        slug: raw.slug,
-        name: raw.name,
-        rarity: raw.rarity as Ore['rarity'],
-        chance: raw.chance,
-        multiplier: raw.multiplier,
-        price: raw.price,
-        color: RARITY_COLORS[raw.rarity] || '#6B7280',
-        location: raw.location,
-        trait: raw.trait,
-        rocks: raw.rocks
-    };
-}
-
-const SITE_URL = 'https://www.forgeore.com';
-
-const ALL_ORES = ORES_DATA.map(toOre);
 const ORE_BY_SLUG = new Map<string, Ore>(ALL_ORES.map((o) => [o.slug, o]));
 
-type CraftingMode = 'weapon' | 'armor';
+type WorldFilter = typeof WORLD_FILTERS[number];
 
 function encodeOresParam(selection: SelectedOre[]): string {
     const bySlug = new Map<string, number>();
@@ -168,7 +134,7 @@ const CalculatorDemoInner: React.FC = () => {
     // State
     const [selectedOres, setSelectedOres] = useState<SelectedOre[]>([]);
     const [isCopied, setIsCopied] = useState(false);
-    const [activeWorld, setActiveWorld] = useState<'W1/W2' | 'W3'>('W1/W2');
+    const [activeWorld, setActiveWorld] = useState<WorldFilter>('All');
     const [craftingMode, setCraftingMode] = useState<CraftingMode>('weapon');
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -243,7 +209,7 @@ const CalculatorDemoInner: React.FC = () => {
             if (desiredOres) params.set('ores', desiredOres);
             else params.delete('ores');
 
-            const href = `/?${params.toString()}`;
+            const href = `/?${params.toString()}${window.location.hash}`;
             router.replace(href, { scroll: false });
         } catch (err) {
             console.error('Failed to sync URL:', err);
@@ -252,34 +218,19 @@ const CalculatorDemoInner: React.FC = () => {
 
     // Filter ores by world and search
     const filteredOres = useMemo(() => {
-        const worldLocations = WORLD_GROUPS[activeWorld];
+        const query = searchTerm.trim().toLowerCase();
 
         return ALL_ORES
-            .filter((ore) => worldLocations.includes(ore.location))
+            .filter((ore) => activeWorld === 'All' || WORLD_GROUPS[activeWorld].includes(ore.location))
             .filter(
                 (ore) =>
-                    searchTerm === '' ||
-                    ore.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    ore.rarity.toLowerCase().includes(searchTerm.toLowerCase())
+                    query === '' ||
+                    ore.name.toLowerCase().includes(query) ||
+                    ore.rarity.toLowerCase().includes(query)
             );
     }, [activeWorld, searchTerm]);
 
-    // Real-time calculation with error handling
-    const stats = useMemo(() => {
-        try {
-            return calculateForgingStats(selectedOres);
-        } catch (error) {
-            console.error('Error calculating forging stats:', error);
-            return {
-                totalMultiplier: 0,
-                stability: 100,
-                totalOreCount: 0,
-                activeTraits: [],
-                weaponProbabilities: [],
-                armorProbabilities: []
-            };
-        }
-    }, [selectedOres]);
+    const stats = useMemo(() => calculateForgingStats(selectedOres, craftingMode), [selectedOres, craftingMode]);
     const validationError = useMemo(
         () => validateOreSelection(selectedOres, craftingMode),
         [selectedOres, craftingMode]
@@ -343,9 +294,10 @@ const CalculatorDemoInner: React.FC = () => {
     const handleShare = async () => {
         try {
             const oresParam = encodeOresParam(selectedOres);
-            const shareUrl = new URL(SITE_URL);
+            const shareUrl = new URL(window.location.origin);
             shareUrl.searchParams.set('mode', craftingMode);
             if (oresParam) shareUrl.searchParams.set('ores', oresParam);
+            shareUrl.hash = 'calculator';
 
             const oreText = selectedOres.length
                 ? selectedOres.map((s) => `${s.ore.name} x${s.quantity}`).join(', ')
@@ -354,14 +306,14 @@ const CalculatorDemoInner: React.FC = () => {
             let topLine: string | null = null;
             if (craftingMode === 'weapon') {
                 const top = stats.weaponProbabilities?.[0];
-                if (top) topLine = `Top Chance: ${top.category} ${top.chance}%`;
+                if (top) topLine = `Estimated top category: ${top.category} ${top.chance}%`;
             } else {
                 const top = stats.armorProbabilities?.[0];
-                if (top) topLine = `Top Chance: ${top.class} ${top.chance}%`;
+                if (top) topLine = `Estimated top category: ${top.class} ${top.chance}%`;
             }
 
             const traitText = stats.activeTraits?.length
-                ? stats.activeTraits.map((t) => `${t.traitName} ${t.percentage}%`).join(', ')
+                ? stats.activeTraits.map((t) => `${t.sourceOre} (${Number(t.mixPercent.toFixed(1))}% of mix): ${t.trait}`).join(', ')
                 : 'None';
 
             const modeLabel = craftingMode === 'weapon' ? 'Weapon' : 'Armor';
@@ -369,7 +321,7 @@ const CalculatorDemoInner: React.FC = () => {
                 `ForgeCalc — The Forge ${modeLabel} Recipe`,
                 `Ores (${totalOres}/${maxOres}): ${oreText}`,
                 topLine,
-                `Multiplier: ${stats.totalMultiplier.toFixed(2)}x • Stability: ${stats.stability.toFixed(1)}%`,
+                `Multiplier: ${stats.totalMultiplier.toFixed(2)}x`,
                 `Traits: ${traitText}`,
                 shareUrl.toString(),
             ]
@@ -403,20 +355,14 @@ const CalculatorDemoInner: React.FC = () => {
 
     return (
         <div className="w-full max-w-6xl mx-auto my-12">
-            {/* Data Version Badge */}
-            <div className="flex justify-end mb-4">
-                <Badge variant="neutral">
-                    Data: {oresJSON.metadata.version} ({oresJSON.metadata.totalOres} ores)
-                </Badge>
-            </div>
-
             <div className="flex flex-col lg:flex-row gap-6">
                 {/* Left: Input Selection */}
                 <div className="flex-1 space-y-4">
                     {/* Mode Toggle */}
-                    <div className="flex items-center gap-4 mb-4">
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
                         <div className="flex bg-surface rounded-lg p-1 border border-white/5">
                             <button
+                                aria-pressed={craftingMode === 'weapon'}
                                 onClick={() => setCraftingMode('weapon')}
                                 className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors ${
                                     craftingMode === 'weapon' 
@@ -427,6 +373,7 @@ const CalculatorDemoInner: React.FC = () => {
                                 <Sword className="w-4 h-4" /> Weapon
                             </button>
                             <button
+                                aria-pressed={craftingMode === 'armor'}
                                 onClick={() => setCraftingMode('armor')}
                                 className={`flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors ${
                                     craftingMode === 'armor' 
@@ -440,9 +387,10 @@ const CalculatorDemoInner: React.FC = () => {
 
                         {/* World Toggle */}
                         <div className="flex bg-surface rounded-lg p-1 border border-white/5">
-                            {(['W1/W2', 'W3'] as const).map(world => (
+                            {WORLD_FILTERS.map(world => (
                                 <button
                                     key={world}
+                                    aria-pressed={activeWorld === world}
                                     onClick={() => setActiveWorld(world)}
                                     className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
                                         activeWorld === world 
@@ -465,7 +413,8 @@ const CalculatorDemoInner: React.FC = () => {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={handleShare}
-                                className="text-xs flex items-center gap-1.5 text-accent-blue hover:text-accent-blue/80 transition-colors"
+                                disabled={totalOres < 3}
+                                className="text-xs flex items-center gap-1.5 text-accent-blue disabled:opacity-40 hover:text-accent-blue/80 transition-colors"
                                 title="Copy share text + link"
                             >
                                 {isCopied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
@@ -480,7 +429,8 @@ const CalculatorDemoInner: React.FC = () => {
                     {/* Search */}
                     <input
                         type="text"
-                        placeholder="Search ores..."
+                        aria-label="Search ores"
+                        placeholder={activeWorld === 'All' ? 'Search all ores...' : `Search ${activeWorld} ores...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full bg-surface border border-white/10 rounded-lg px-4 py-2 text-sm focus:border-accent-blue outline-none"
@@ -499,12 +449,14 @@ const CalculatorDemoInner: React.FC = () => {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button 
+                                            aria-label={`Remove one ${ore.name}`}
                                             onClick={() => removeOre(ore.slug)}
                                             className="p-1 hover:bg-white/10 rounded"
                                         >
                                             <Minus className="w-4 h-4 text-gray-400" />
                                         </button>
                                         <input
+                                            aria-label={`${ore.name} quantity`}
                                             type="number"
                                             min="1"
                                             max={maxOres}
@@ -513,6 +465,7 @@ const CalculatorDemoInner: React.FC = () => {
                                             className="w-14 bg-surface border border-white/10 rounded px-2 py-1 text-sm text-center"
                                         />
                                         <button 
+                                            aria-label={`Add one ${ore.name}`}
                                             onClick={() => addOre(ore)}
                                             className="p-1 hover:bg-white/10 rounded"
                                             disabled={totalOres >= maxOres}
@@ -535,9 +488,11 @@ const CalculatorDemoInner: React.FC = () => {
 
                     {/* Ore Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2">
+                        {filteredOres.length === 0 && <p className="col-span-full p-3 text-sm text-gray-400">No matching ores in this filter.</p>}
                         {filteredOres.map((ore) => {
                             const selected = selectedOres.find((s) => s.ore.slug === ore.slug);
                             const isSelected = !!selected;
+                            const trait = traitForMode(ore, craftingMode);
                             const isDisabled = (!canAddMore && !isSelected) || (totalOres >= maxOres && isSelected);
 
                             return (
@@ -566,9 +521,9 @@ const CalculatorDemoInner: React.FC = () => {
                                     </div>
                                     <div className="text-sm font-medium">{ore.name}</div>
                                     <div className="text-[10px] uppercase tracking-wider mt-1 opacity-60">{ore.rarity}</div>
-                                    {ore.trait && (
-                                        <div className="text-[9px] text-accent-blue mt-1 truncate" title={ore.trait}>
-                                            ★ Has Trait
+                                    {trait && (
+                                        <div className="text-[9px] text-accent-blue mt-1 truncate" title={trait}>
+                                            ★ {craftingMode === 'weapon' ? 'Weapon' : 'Armor'} trait
                                         </div>
                                     )}
                                 </button>
@@ -600,17 +555,11 @@ const CalculatorDemoInner: React.FC = () => {
                         )}
 
                         {/* KPI Row */}
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 gap-3">
                             <div className="p-3 bg-black/40 rounded-lg border border-white/5">
                                 <div className="text-xs text-gray-500 font-mono mb-1">MULTIPLIER</div>
                                 <div className="text-xl font-mono text-white tabular-nums">
-                                    {(stats?.totalMultiplier ?? 0).toFixed(2)}x
-                                </div>
-                            </div>
-                            <div className="p-3 bg-black/40 rounded-lg border border-white/5">
-                                <div className="text-xs text-gray-500 font-mono mb-1">STABILITY</div>
-                                <div className={`text-xl font-mono tabular-nums ${(stats?.stability ?? 100) >= 70 ? 'text-success' : (stats?.stability ?? 100) >= 40 ? 'text-warning' : 'text-error'}`}>
-                                    {stats?.stability ?? 100}%
+                                    {totalOres >= 3 ? `${stats.totalMultiplier.toFixed(2)}x` : '—'}
                                 </div>
                             </div>
                             <div className="p-3 bg-black/40 rounded-lg border border-white/5">
@@ -625,7 +574,7 @@ const CalculatorDemoInner: React.FC = () => {
                         {probabilityData.length > 0 && (
                             <RechartsChart 
                                 data={probabilityData} 
-                                title={craftingMode === 'weapon' ? 'WEAPON TYPE PROBABILITY' : 'ARMOR CLASS PROBABILITY'}
+                                title={craftingMode === 'weapon' ? 'ESTIMATED WEAPON TYPE CHANCES' : 'ESTIMATED ARMOR CLASS CHANCES'}
                             />
                         )}
 
@@ -634,30 +583,29 @@ const CalculatorDemoInner: React.FC = () => {
                             <div className="text-xs text-gray-500 font-mono border-b border-white/5 pb-1">ACTIVE TRAITS</div>
 
                             {(stats?.activeTraits?.length ?? 0) > 0 ? (
-                                (stats?.activeTraits ?? []).map((t, idx) => (
-                                    <div key={idx} className="p-2 bg-black/40 rounded border border-white/5">
+                                (stats?.activeTraits ?? []).map((t) => (
+                                    <div key={t.sourceOre} className="p-2 bg-black/40 rounded border border-white/5">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-sm text-white font-medium">{t.traitName}</span>
-                                            <span className="font-mono text-accent-blue tabular-nums">{t.percentage}%</span>
+                                            <span className="text-sm text-white font-medium">{t.sourceOre}</span>
+                                            <span className="font-mono text-accent-blue tabular-nums">{Number(t.mixPercent.toFixed(1))}% of mix</span>
                                         </div>
                                         <div className="text-xs text-gray-500 mt-1">
-                                            {t.sourceOre}: {t.trait}
+                                            {t.trait}
                                         </div>
                                     </div>
                                 ))
                             ) : (
                                 <div className="text-center py-4 text-xs text-gray-600 italic">
-                                    {totalOres > 0 ? "No active traits (need ≥10% composition of trait ore)" : "Select ores to see predictions"}
+                                    {totalOres > 0 ? "No active traits for this mode. Use at least 3 ores and reach a 10% share with a matching trait ore." : "Select ores to see predictions"}
                                 </div>
                             )}
                         </div>
                     </div>
 
                     <div className="p-4 border-t border-white/10 bg-surface/50 flex gap-2">
-                        <Button className="flex-1" icon={<Sparkles />} disabled={totalOres < 3}>
-                            FORGE {craftingMode.toUpperCase()}
+                        <Button variant="secondary" icon={<RefreshCw />} disabled={!selectedOres.length} onClick={() => setSelectedOres([])}>
+                            Clear mix
                         </Button>
-                        <Button variant="secondary" icon={<RefreshCw />} className="w-12" onClick={() => setSelectedOres([])}></Button>
                     </div>
                 </Card>
             </div>

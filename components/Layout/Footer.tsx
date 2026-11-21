@@ -14,11 +14,8 @@ const Footer: React.FC = () => {
               <span className="font-bold text-white tracking-tight">Forge Calc</span>
             </div>
             <p className="text-sm text-gray-500 leading-relaxed mb-4">
-              Forged for builders. The most accurate simulation tool for optimizing your in-game crafting economy.
+              Plan ore mixes for Roblox The Forge and compare weapon and armor traits.
             </p>
-            <div className="inline-block px-2 py-1 bg-surface-highlight rounded border border-white/5 text-[10px] text-gray-400 font-mono">
-              v2.4.0 (Raven Cave Updated)
-            </div>
           </div>
 
           <div>
@@ -57,7 +54,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/#setups" className="hover:text-accent-blue transition-colors">
-                  Best Setups
+                  Example Mixes
                 </Link>
               </li>
               <li>

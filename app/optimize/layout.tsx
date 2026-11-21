@@ -4,12 +4,12 @@ import Link from 'next/link';
 const SITE_URL = 'https://www.forgeore.com';
 const TITLE = 'Forge Optimizer | The Forge Crafting Calculator & Best Recipes';
 const DESCRIPTION =
-  'Find the best ore combinations for The Forge Roblox. The Forge crafting calculator optimizes recipes by trait, multiplier, and stability. Load results into the forging calculator with one click.';
+  'Find the best ore combinations for The Forge Roblox. The Forge crafting calculator optimizes recipes by weapon trait and ore multiplier. Load results into the forging calculator with one click.';
 
 const OPTIMIZER_FAQ = [
   {
     q: 'What does the Forge Optimizer do?',
-    a: 'The Forge Optimizer analyzes all possible ore combinations and ranks them by multiplier, stability, or trait strength. It helps you find the best crafting recipe for your specific goals without trial and error.',
+    a: 'The Forge Optimizer compares a selection of weapon ore mixes and ranks matching recipes by their average multiplier.',
   },
   {
     q: 'How do I load an optimized recipe into the crafting calculator?',
@@ -20,8 +20,8 @@ const OPTIMIZER_FAQ = [
     a: 'Yes. Use the Target Trait dropdown to find recipes that activate a specific trait, set a minimum multiplier threshold, or require a specific ore to be included in the combination.',
   },
   {
-    q: 'What is the difference between Power and Stable sorting?',
-    a: 'Power sorting ranks recipes by total multiplier (higher damage/defense). Stable sorting prioritizes combinations with consistent outcomes and lower variance, ideal for players who want reliable results.',
+    q: 'How are results sorted?',
+    a: 'Choose Highest × or Lowest × to sort the matching recipes by their weighted average ore multiplier.',
   },
 ];
 
@@ -94,9 +94,7 @@ export default function OptimizeLayout({
             <div className="text-gray-400 text-sm leading-relaxed space-y-4">
               <p>
                 The Forge Optimizer is a companion tool for the <Link href="/" className="text-accent-blue hover:underline">Forge Calculator</Link>.
-                Instead of manually testing different ore combinations, the optimizer searches through proven recipes
-                and ranks them by the metrics that matter most to your playstyle — whether that&apos;s raw multiplier power,
-                trait synergies, or crafting stability.
+                Filter weapon recipes by ore or trait and compare their average multipliers.
               </p>
               <p>
                 Every result can be loaded directly into the forging calculator with one click,

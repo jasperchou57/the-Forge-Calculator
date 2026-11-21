@@ -1,3 +1,4 @@
+import { ALL_ORES } from '../lib/ores';
 import { describe, it, expect } from 'vitest';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '../lib/calculator';
 import { SelectedOre, Ore } from '../types';
@@ -38,7 +39,7 @@ describe('Calculator Engine - Basic Calculations', () => {
     it('1. should handle empty input', () => {
         const result = calculateForgingStats([]);
         expect(result.totalMultiplier).toBe(0);
-        expect(result.stability).toBe(100);
+        expect(result).not.toHaveProperty('stability');
         expect(result.totalOreCount).toBe(0);
         expect(result.activeTraits).toHaveLength(0);
     });
@@ -88,44 +89,36 @@ describe('Calculator Engine - Basic Calculations', () => {
 
 });
 
-describe('Calculator Engine - Stability', () => {
+describe('Reviewed ore data in the calculator', () => {
+    const recipe = (slug: string, quantity = 3) => [{ ore: ALL_ORES.find(ore => ore.slug === slug)!, quantity }];
 
-    // Test 7: Low multiplier = high stability
-    it('7. should have high stability with low multiplier ores', () => {
-        const result = calculateForgingStats([
-            { ore: MOCK_ORES.stone, quantity: 10 }
-        ]);
-        // 100 - (0.2 * 3) = 99.4
-        expect(result.stability).toBeGreaterThan(95);
+    it('uses the corrected Vooite multiplier with shared and armor-only effects', () => {
+        const weapon = calculateForgingStats(recipe('vooite'), 'weapon');
+        const armor = calculateForgingStats(recipe('vooite'), 'armor');
+        expect(weapon.totalMultiplier).toBe(21);
+        expect(weapon.activeTraits[0].trait).toContain('Radioactive');
+        expect(weapon.activeTraits[0].trait).not.toContain('Thorns');
+        expect(armor.activeTraits[0].trait).toContain('Thorns');
     });
 
-    // Test 8: High multiplier = low stability
-    it('8. should have lower stability with high multiplier ores', () => {
-        const result = calculateForgingStats([
-            { ore: MOCK_ORES.gargantuan, quantity: 3 }
-        ]);
-        // 100 - (25.0 * 3) = 25 (clamped to 10 minimum)
-        expect(result.stability).toBeLessThanOrEqual(30);
+    it('switches effects without changing the weighted multiplier', () => {
+        const mix = [...recipe('aetherit'), ...recipe('iron', 7)];
+        expect(calculateForgingStats(mix, 'weapon').activeTraits[0].trait).toContain('attack speed');
+        expect(calculateForgingStats(mix, 'armor').activeTraits[0].trait).toContain('movement speed');
+        expect(calculateForgingStats(mix, 'weapon').totalMultiplier).toBe(1.01);
     });
 
-    // Test 9: Medium multiplier = medium stability
-    it('9. should have medium stability with medium multipliers', () => {
-        const result = calculateForgingStats([
-            { ore: MOCK_ORES.diamond, quantity: 6 }
-        ]);
-        // 100 - (2.0 * 3) = 94
-        expect(result.stability).toBeGreaterThan(90);
-        expect(result.stability).toBeLessThan(100);
+    it('excludes effects from the wrong mode or below the threshold', () => {
+        expect(calculateForgingStats(recipe('obsidian'), 'weapon').activeTraits).toEqual([]);
+        expect(calculateForgingStats(recipe('fireite'), 'armor').activeTraits).toEqual([]);
+        expect(calculateForgingStats([...recipe('fireite', 1), ...recipe('iron', 10)]).activeTraits).toEqual([]);
     });
 
-    // Test 10: Stability minimum is 10
-    it('10. should clamp stability minimum at 10', () => {
-        const result = calculateForgingStats([
-            { ore: MOCK_ORES.gargantuan, quantity: 51 }
-        ]);
-        expect(result.stability).toBeGreaterThanOrEqual(10);
+    it('uses the reviewed crystal and Galaxite multipliers in recipes', () => {
+        expect(calculateForgingStats(recipe('blue-crystal')).totalMultiplier).toBe(3.4);
+        expect(calculateForgingStats(recipe('arcane-crystal')).totalMultiplier).toBe(9);
+        expect(calculateForgingStats(recipe('galaxite')).totalMultiplier).toBe(25);
     });
-
 });
 
 describe('Calculator Engine - Trait Activation', () => {
@@ -140,7 +133,7 @@ describe('Calculator Engine - Trait Activation', () => {
     });
 
     // Test 12: Trait ore below 10% = not activated
-    it('12. should not activate trait below 10% composition', () => {
+    it('12. should activate a trait at exactly 10% composition', () => {
         const result = calculateForgingStats([
             { ore: MOCK_ORES.iron, quantity: 27 },      // 90%
             { ore: MOCK_ORES.obsidian, quantity: 3 }    // 10% - at threshold
@@ -148,29 +141,29 @@ describe('Calculator Engine - Trait Activation', () => {
         // At exactly 10%, should be minimally active
         const obsidianTrait = result.activeTraits.find(t => t.sourceOre === 'Obsidian');
         expect(obsidianTrait).toBeDefined();
-        expect(obsidianTrait?.percentage).toBe(0); // Linear interp: (10-10)/(30-10) = 0
+        expect(obsidianTrait?.mixPercent).toBe(10);
     });
 
     // Test 13: Trait ore at 30% = 100% strength
-    it('13. should activate trait at 100% strength when at 30% composition', () => {
+    it('13. should report the 30% composition of an active trait ore', () => {
         const result = calculateForgingStats([
             { ore: MOCK_ORES.obsidian, quantity: 3 },   // 30%
             { ore: MOCK_ORES.iron, quantity: 7 }        // 70%
         ]);
         const obsidianTrait = result.activeTraits.find(t => t.sourceOre === 'Obsidian');
         expect(obsidianTrait).toBeDefined();
-        expect(obsidianTrait?.percentage).toBe(100);
+        expect(obsidianTrait?.mixPercent).toBe(30);
     });
 
     // Test 14: Trait ore at 20% = 50% strength
-    it('14. should calculate 50% trait strength at 20% composition', () => {
+    it('14. should report the ore share at 20% composition', () => {
         const result = calculateForgingStats([
             { ore: MOCK_ORES.eyeOre, quantity: 2 },     // 20%
             { ore: MOCK_ORES.iron, quantity: 8 }        // 80%
         ]);
         const trait = result.activeTraits.find(t => t.sourceOre === 'Eye Ore');
         expect(trait).toBeDefined();
-        expect(trait?.percentage).toBe(50);
+        expect(trait?.mixPercent).toBe(20);
     });
 
     // Test 15: Multiple traits active
@@ -182,18 +175,18 @@ describe('Calculator Engine - Trait Activation', () => {
         ]);
         expect(result.activeTraits.length).toBe(3);
         result.activeTraits.forEach(t => {
-            expect(t.percentage).toBe(100); // All at 33% > 30%
+            expect(t.mixPercent).toBeCloseTo(100 / 3);
         });
     });
 
     // Test 16: Trait above 30% still 100%
-    it('16. should cap trait strength at 100% even above 30% composition', () => {
+    it('16. should report the whole mix when a single trait ore is used', () => {
         const result = calculateForgingStats([
             { ore: MOCK_ORES.iceite, quantity: 10 }  // 100%
         ]);
         const trait = result.activeTraits.find(t => t.sourceOre === 'Iceite');
         expect(trait).toBeDefined();
-        expect(trait?.percentage).toBe(100);
+        expect(trait?.mixPercent).toBe(100);
     });
 
 });
@@ -373,15 +366,12 @@ describe('Calculator Engine - Edge Cases', () => {
     it('36. should handle very low multiplier ores (0.2x)', () => {
         const result = calculateForgingStats([{ ore: MOCK_ORES.stone, quantity: 10 }]);
         expect(result.totalMultiplier).toBe(0.2);
-        expect(result.stability).toBeGreaterThan(99);
     });
 
     // Test 37: Very high multiplier
     it('37. should handle very high multiplier ores (25x)', () => {
         const result = calculateForgingStats([{ ore: MOCK_ORES.gargantuan, quantity: 10 }]);
         expect(result.totalMultiplier).toBe(25.0);
-        // 100 - (25 * 3) = 25, stability is 25 (not clamped to 10 for 25x)
-        expect(result.stability).toBe(25);
     });
 
     // Test 38: Ore with null price

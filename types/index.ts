@@ -25,7 +25,11 @@ export interface TraitEffect {
     optimalPercent?: number;
 }
 
+export type CraftingMode = 'weapon' | 'armor';
+export type OreTraits = Partial<Record<CraftingMode | 'both', string>>;
+
 export interface Ore {
+    traits?: OreTraits;
     slug: string;
     name: string;
     rarity: OreRarity;
@@ -78,12 +82,11 @@ export interface Armor {
 // Forging result from calculator
 export interface ForgingResult {
     totalMultiplier: number;
-    stability: number;
     totalOreCount: number;
     activeTraits: {
         trait: string;
         traitName: string;
-        percentage: number; // 0-100% effectiveness
+        mixPercent: number;
         sourceOre: string;
     }[];
     weaponProbabilities: {

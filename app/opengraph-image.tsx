@@ -69,7 +69,7 @@ export default function OpengraphImage() {
             maxWidth: 900,
           }}
         >
-          Shareable forging recipes, real probability tables, and a full ore database for Roblox The Forge.
+          Compare ore multipliers and equipment traits, then share your recipe for Roblox The Forge.
         </div>
 
         <div
@@ -80,7 +80,7 @@ export default function OpengraphImage() {
             flexWrap: 'wrap',
           }}
         >
-          {['88 Ores', 'World 1-3', 'Reproducible Links', 'Fast + Mobile Friendly'].map((label) => (
+          {['88 Ores', 'Weapon & Armor Traits', 'Shareable Recipes'].map((label) => (
             <div
               key={label}
               style={{

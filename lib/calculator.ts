@@ -1,4 +1,5 @@
-import { SelectedOre, ForgingResult } from '@/types';
+import { CraftingMode, SelectedOre, ForgingResult } from '@/types';
+import { traitForMode } from './ores';
 import probabilitiesData from '@/data/v20260201/probabilities.json';
 
 // Weapon probability table type
@@ -61,14 +62,13 @@ function getArmorProbabilityRange(oreCount: number): string {
  * - Support up to 4 different ore types
  * - Total ore count: 3-51 for weapons, 3-45 for armor
  * - Trait activation: 10% minimum, 30% optimal
- * - Use real probability tables from game data
+ * - Estimate equipment categories from the ore-count tables
  */
-export function calculateForgingStats(selectedOres: SelectedOre[]): ForgingResult {
+export function calculateForgingStats(selectedOres: SelectedOre[], mode: CraftingMode = 'weapon'): ForgingResult {
     // Handle empty input
     if (selectedOres.length === 0) {
         return {
             totalMultiplier: 0,
-            stability: 100,
             totalOreCount: 0,
             activeTraits: [],
             weaponProbabilities: [],
@@ -83,7 +83,6 @@ export function calculateForgingStats(selectedOres: SelectedOre[]): ForgingResul
     if (totalOreCount < 3) {
         return {
             totalMultiplier: 0,
-            stability: 100,
             totalOreCount,
             activeTraits: [],
             weaponProbabilities: [],
@@ -99,41 +98,16 @@ export function calculateForgingStats(selectedOres: SelectedOre[]): ForgingResul
     );
     const avgMultiplier = Number((sumMultiplier / totalOreCount).toFixed(2));
 
-    // 2. Calculate Stability
-    // Higher multiplier = lower stability (heuristic)
-    // Base 100, -3% per 1.0 multiplier
-    const stability = Math.max(10, Math.min(100, 100 - (avgMultiplier * 3)));
-
-    // 3. Calculate Trait Activation
-    // Trait activates at 10% composition minimum, optimal at 30%
-    const activeTraits = selectedOres
-        .filter(item => item.ore.trait !== null)
-        .map(item => {
-            const percentOfTotal = (item.quantity / totalOreCount) * 100;
-            
-            // Activation Logic: Start at 10%, Max at 30%
-            if (percentOfTotal < 10) return null;
-
-            let strength = 0;
-            if (percentOfTotal >= 30) {
-                strength = 100;
-            } else {
-                // Linear interpolation between 10% and 30%
-                strength = ((percentOfTotal - 10) / (30 - 10)) * 100;
-            }
-
-            // Extract trait name from trait description
-            const traitDesc = item.ore.trait || '';
-            const traitName = extractTraitName(traitDesc);
-
-            return {
-                trait: traitDesc,
-                traitName,
-                percentage: Math.round(strength),
-                sourceOre: item.ore.name
-            };
-        })
-        .filter((t): t is NonNullable<typeof t> => t !== null);
+    const activeTraits = selectedOres.flatMap(({ ore, quantity }) => {
+        const trait = traitForMode(ore, mode);
+        if (!trait || quantity * 10 < totalOreCount) return [];
+        return [{
+            trait,
+            traitName: extractTraitName(trait),
+            mixPercent: (quantity / totalOreCount) * 100,
+            sourceOre: ore.name
+        }];
+    });
 
     // 4. Calculate Weapon Probabilities based on ore count
     const weaponRange = getWeaponProbabilityRange(totalOreCount);
@@ -155,7 +129,6 @@ export function calculateForgingStats(selectedOres: SelectedOre[]): ForgingResul
 
     return {
         totalMultiplier: avgMultiplier,
-        stability: Number(stability.toFixed(1)),
         totalOreCount,
         activeTraits,
         weaponProbabilities,

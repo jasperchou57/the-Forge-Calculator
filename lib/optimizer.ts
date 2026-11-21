@@ -1,46 +1,12 @@
 import { Ore, SelectedOre, ForgingResult } from '@/types';
 import { calculateForgingStats } from './calculator';
-import oresJSON from '@/data/v20260201/ores.json';
-
-// Type for ore data from JSON
-interface OreDataRaw {
-    slug: string;
-    name: string;
-    rarity: string;
-    chance: string;
-    multiplier: number;
-    price: number | null;
-    trait: string | null;
-    rocks: string[];
-    location: string;
-}
-
-const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
-const ALL_ORES_RAW = oresJSON.ores as OreDataRaw[];
-
-// Convert raw ore data to Ore type
-function toOre(raw: OreDataRaw): Ore {
-    return {
-        slug: raw.slug,
-        name: raw.name,
-        rarity: raw.rarity as Ore['rarity'],
-        chance: raw.chance,
-        multiplier: raw.multiplier,
-        price: raw.price,
-        color: RARITY_COLORS[raw.rarity] || '#6B7280',
-        location: raw.location,
-        trait: raw.trait,
-        rocks: raw.rocks
-    };
-}
-
-const ALL_ORES = ALL_ORES_RAW.map(toOre);
+import { ALL_ORES, traitForMode } from './ores';
 
 export interface OptimizationCriteria {
     targetTrait?: string;
     minMultiplier?: number;
     mustContainOreSlug?: string;
-    sortBy: 'multiplier' | 'stability' | 'trait_strength';
+    sortBy: 'multiplier' | 'lowest_multiplier' | 'trait_strength';
     craftingType: 'weapon' | 'armor';
     targetOreCount?: number;
 }
@@ -78,7 +44,7 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
     // If targeting a trait, filter to ores with traits
     if (criteria.targetTrait) {
         eligibleOres = eligibleOres.filter(o => 
-            o.trait && o.trait.toLowerCase().includes(criteria.targetTrait!.toLowerCase())
+            traitForMode(o, criteria.craftingType)?.toLowerCase().includes(criteria.targetTrait!.toLowerCase())
         );
     }
 
@@ -99,7 +65,7 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
 
     // Two ore combinations (50/50 split)
     for (let i = 0; i < topOres.length; i++) {
-        for (let j = i; j < topOres.length; j++) {
+        for (let j = i + 1; j < topOres.length; j++) {
             const half = Math.floor(targetCount / 2);
             combinations.push([
                 { ore: topOres[i], quantity: half },
@@ -110,8 +76,8 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
 
     // Three ore combinations (with trait optimization)
     for (let i = 0; i < Math.min(topOres.length, 10); i++) {
-        for (let j = i; j < Math.min(topOres.length, 10); j++) {
-            for (let k = j; k < Math.min(topOres.length, 10); k++) {
+        for (let j = i + 1; j < Math.min(topOres.length, 10); j++) {
+            for (let k = j + 1; k < Math.min(topOres.length, 10); k++) {
                 const third = Math.floor(targetCount / 3);
                 const remainder = targetCount - (third * 2);
                 combinations.push([
@@ -132,7 +98,7 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
             }
         }
 
-        const stats = calculateForgingStats(combo);
+        const stats = calculateForgingStats(combo, criteria.craftingType);
 
         // Check "Min Multiplier"
         if (criteria.minMultiplier && stats.totalMultiplier < criteria.minMultiplier) {
@@ -146,13 +112,13 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
                 t.trait.toLowerCase().includes(criteria.targetTrait!.toLowerCase())
             );
             if (!active) continue; // Trait must be present
-            traitScore = active.percentage;
+            traitScore = Math.min(active.mixPercent, 30);
         }
 
         // Calculate Score based on SortBy
         let score = 0;
         if (criteria.sortBy === 'multiplier') score = stats.totalMultiplier;
-        else if (criteria.sortBy === 'stability') score = stats.stability;
+        else if (criteria.sortBy === 'lowest_multiplier') score = -stats.totalMultiplier;
         else if (criteria.sortBy === 'trait_strength') score = traitScore;
 
         results.push({
@@ -170,28 +136,10 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
  * Helper to get unique traits available in the ore data for the dropdown
  */
 export function getAvailableTraits(): string[] {
-    const traits = new Set<string>();
-    ALL_ORES.forEach(o => {
-        if (o.trait) {
-            // Extract trait name patterns
-            if (o.trait.includes('defense')) traits.add('Defense');
-            if (o.trait.includes('damage') || o.trait.includes('Damage')) traits.add('Damage');
-            if (o.trait.includes('crit')) traits.add('Critical');
-            if (o.trait.includes('movement speed')) traits.add('Speed');
-            if (o.trait.includes('vitality')) traits.add('Vitality');
-            if (o.trait.includes('dodge')) traits.add('Dodge');
-            if (o.trait.includes('burn')) traits.add('Burn');
-            if (o.trait.includes('freeze')) traits.add('Freeze');
-            if (o.trait.includes('slow')) traits.add('Slow');
-            if (o.trait.includes('poison')) traits.add('Poison');
-            if (o.trait.includes('AOE') || o.trait.includes('explosion')) traits.add('AOE');
-            if (o.trait.includes('health') || o.trait.includes('HP')) traits.add('Health');
-            if (o.trait.includes('lifesteal')) traits.add('Lifesteal');
-            if (o.trait.includes('lethality')) traits.add('Lethality');
-            if (o.trait.includes('attack speed')) traits.add('Attack Speed');
-        }
-    });
-    return Array.from(traits).sort();
+    const effects = ALL_ORES.map(ore => traitForMode(ore, 'weapon')?.toLowerCase() || '');
+    const filters = ['Attack speed', 'Burn', 'Critical', 'Damage', 'Explosion', 'Freeze',
+        'Lifesteal', 'Poison', 'Slow', 'Smite'];
+    return filters.filter(filter => effects.some(effect => effect.includes(filter.toLowerCase())));
 }
 
 /**

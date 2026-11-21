@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Header from '@/components/Layout/Header';
+import { ALL_ORES as ORES_DATA } from '@/lib/ores';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import { ArrowRight, Database } from 'lucide-react';
@@ -9,20 +10,6 @@ const TITLE = 'All Ores List & Stats - The Forge Roblox Wiki';
 const DESCRIPTION =
     'Complete database of all ores in The Forge Roblox. Compare multipliers, rarities, and traits for Iron, Gold, Mythril, Void Ore, and more.';
 
-// Ore data with color mapping
-interface OreData {
-    slug: string;
-    name: string;
-    rarity: string;
-    chance: string;
-    multiplier: number;
-    price: number | null;
-    trait: string | null;
-    rocks: string[];
-    location: string;
-}
-
-const ORES_DATA = oresJSON.ores as OreData[];
 const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
 
 // Helper to get color from rarity

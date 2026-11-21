@@ -7,8 +7,8 @@ import Card from '../../components/UI/Card';
 import Button from '../../components/UI/Button';
 import { findBestCombinations, getAvailableTraits, OptimizationResult } from '@/lib/optimizer';
 import { Sparkles, ArrowRight, Settings, Filter } from 'lucide-react';
-import oresJSON from '@/data/v20260201/ores.json';
-import { Ore, SelectedOre } from '@/types';
+import { ALL_ORES as ores } from '@/lib/ores';
+import { SelectedOre } from '@/types';
 
 const OptimizerPage = () => {
     const router = useRouter();
@@ -17,7 +17,7 @@ const OptimizerPage = () => {
     const [targetTrait, setTargetTrait] = useState<string>('');
     const [minMultiplier, setMinMultiplier] = useState<number>(0);
     const [mustContain, setMustContain] = useState<string>('');
-    const [sortBy, setSortBy] = useState<'multiplier' | 'stability' | 'trait_strength'>('multiplier');
+    const [sortBy, setSortBy] = useState<'multiplier' | 'lowest_multiplier' | 'trait_strength'>('multiplier');
 
     // Results State
     const [results, setResults] = useState<OptimizationResult[]>([]);
@@ -25,7 +25,6 @@ const OptimizerPage = () => {
 
     // Data helpers
     const traits = getAvailableTraits();
-    const ores = oresJSON.ores as Ore[];
 
     const handleOptimize = () => {
         const res = findBestCombinations({
@@ -117,13 +116,13 @@ const OptimizerPage = () => {
                                             onClick={() => setSortBy('multiplier')}
                                             className={`flex-1 text-xs py-1.5 rounded ${sortBy === 'multiplier' ? 'bg-accent-blue text-white' : 'text-gray-400'}`}
                                         >
-                                            Power
+                                            Highest ×
                                         </button>
                                         <button
-                                            onClick={() => setSortBy('stability')}
-                                            className={`flex-1 text-xs py-1.5 rounded ${sortBy === 'stability' ? 'bg-accent-blue text-white' : 'text-gray-400'}`}
+                                            onClick={() => setSortBy('lowest_multiplier')}
+                                            className={`flex-1 text-xs py-1.5 rounded ${sortBy === 'lowest_multiplier' ? 'bg-accent-blue text-white' : 'text-gray-400'}`}
                                         >
-                                            Stable
+                                            Lowest ×
                                         </button>
                                     </div>
                                 </div>
@@ -172,23 +171,17 @@ const OptimizerPage = () => {
                                             </div>
 
                                             {/* Stats */}
-                                            <div className="flex-1 grid grid-cols-3 gap-2 text-center md:text-left">
+                                            <div className="flex-1 grid grid-cols-2 gap-2 text-center md:text-left">
                                                 <div>
                                                     <div className="text-[10px] text-gray-500 font-mono">MULTIPLIER</div>
                                                     <div className="text-lg font-bold text-white">{res.stats.totalMultiplier.toFixed(2)}x</div>
                                                 </div>
                                                 <div>
-                                                    <div className="text-[10px] text-gray-500 font-mono">STABILITY</div>
-                                                    <div className={`text-lg font-bold ${res.stats.stability < 100 ? 'text-warning' : 'text-success'}`}>
-                                                        {res.stats.stability}%
-                                                    </div>
-                                                </div>
-                                                <div>
                                                     <div className="text-[10px] text-gray-500 font-mono">TRAITS</div>
                                                     {res.stats.activeTraits.length > 0 ? (
                                                         res.stats.activeTraits.map(t => (
-                                                            <div key={t.traitName} className="text-xs text-accent-blue truncate">
-                                                                {t.traitName} ({t.percentage}%)
+                                                            <div key={t.sourceOre} title={t.trait} className="text-xs text-accent-blue truncate">
+                                                                {t.sourceOre} ({Math.round(t.mixPercent)}% of mix)
                                                             </div>
                                                         ))
                                                     ) : (
