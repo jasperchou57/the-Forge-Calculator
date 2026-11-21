@@ -119,6 +119,17 @@ describe('Reviewed ore data in the calculator', () => {
         expect(calculateForgingStats(recipe('arcane-crystal')).totalMultiplier).toBe(9);
         expect(calculateForgingStats(recipe('galaxite')).totalMultiplier).toBe(25);
     });
+
+    it('keeps the Sealed Curse penalties in both modes and Berserker on armor', () => {
+        const mix = [...recipe('sealed-curse', 1), ...recipe('azuryxite', 1), ...recipe('kyubite', 1)];
+        for (const mode of ['weapon', 'armor'] as const) {
+            const result = calculateForgingStats(mix, mode);
+            expect(result.totalMultiplier).toBe(14);
+            const curse = result.activeTraits.find(t => t.sourceOre === 'Sealed Curse')!.trait;
+            expect(curse).toContain('lose 20% maximum health, 10% stamina and 15% movement speed');
+            expect(curse.includes('Berserker')).toBe(mode === 'armor');
+        }
+    });
 });
 
 describe('Calculator Engine - Trait Activation', () => {

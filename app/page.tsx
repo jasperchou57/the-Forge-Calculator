@@ -37,7 +37,7 @@ const FAQ_DATA = [
   },
   {
     q: 'Which ores can I use?',
-    a: `Search all ${oreData.ores.length} ores by name, or choose a world. The W4 filter includes the 13 Bamboo Forest ores, plus Galaxite and Vooite.`
+    a: `Search all ${oreData.ores.length} ores by name, or choose a world. The W4 filter includes 13 Bamboo Forest ores, 15 Holy Tree ores, Galaxite and Vooite.`
   },
   {
     q: 'Why do traits change when I switch modes?',
@@ -298,7 +298,7 @@ export default function Home() {
           
           <div className="max-w-2xl mx-auto space-y-6">
             {[
-              { ver: "v20261121", date: "Nov 21, 2026", changes: ["Added 13 Bamboo Forest ores to the World 4 filter", "Updated 43 ore multipliers", "Added World 4 filtering for Galaxite and Vooite", "Separated weapon and armor traits in recipe results"] },
+              { ver: "v20261121", date: "Nov 21, 2026", changes: ["Added 15 Holy Tree ores and 13 Bamboo Forest ores to the World 4 filter", "Updated 43 ore multipliers", "Added World 4 filtering for Galaxite and Vooite", "Separated weapon and armor traits in recipe results"] },
               { ver: "v20260201", date: "Feb 1, 2026", changes: ["Listed 88 ores", "Implemented 50+ unit tests for calculation accuracy", "Added World 1/2 vs World 3 ore filtering", "URL sharing for forge setups"] },
               { ver: "v20260115", date: "Jan 15, 2026", changes: ["Added Frostspire Expanse ores", "Fixed trait activation threshold calculation", "Mobile UI improvements"] },
               { ver: "v20260101", date: "Jan 1, 2026", changes: ["Initial release with core calculator", "Weapon categories and armor classes", "Basic probability tables"] }
