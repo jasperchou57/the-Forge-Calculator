@@ -6,6 +6,7 @@ import Footer from '@/components/Layout/Footer';
 import Card from '@/components/UI/Card';
 import Button from '@/components/UI/Button';
 import {
+  Anvil,
   Calculator,
   Settings,
   ArrowRight,
@@ -65,15 +66,15 @@ export const metadata: Metadata = {
 const CRAFTING_FAQ = [
   {
     q: 'How does crafting work in The Forge?',
-    a: 'Crafting in The Forge combines ores at the anvil to produce weapons or armor. The outcome depends on how many ores you use, their rarity, multiplier values, and composition percentages. Higher-quality ores and larger quantities produce stronger equipment.',
+    a: 'At a forge, combine ores to make a weapon or armor. Matching molds help you target a particular piece. At a Crafting Stall, spend the ingredients and gold in a recipe to make its listed ore.',
   },
   {
     q: 'What is the difference between weapon and armor crafting?',
-    a: 'Weapon crafting uses 3–51 ores and produces categories like Dagger, Katana, Straight Sword, Great Sword, or Colossal based on ore count. Armor crafting uses 3–45 ores and produces Light, Medium, or Heavy armor. Each has different stat calculations.',
+    a: 'Select Weapon to compare weapon types or Armor to compare light, medium and heavy armor. ForgeCalc uses World 1–3 data for these estimates.',
   },
   {
     q: 'How do traits activate during crafting?',
-    a: 'Traits activate when a single ore type reaches at least 10% of your total composition. At 30% or higher, the trait reaches full (100%) effectiveness. Between 10–30%, effectiveness scales linearly. Planning your ore ratios is key to activating the right traits.',
+    a: 'In ForgeCalc, a trait appears when its ore makes up at least 10% of the mix. At 30% or higher, the trait reaches full (100%) effectiveness. Between 10–30%, effectiveness scales linearly. Planning your ore ratios is key to activating the right traits.',
   },
   {
     q: 'What is a crafting test in The Forge?',
@@ -85,7 +86,7 @@ const CRAFTING_FAQ = [
   },
   {
     q: 'Does ore count matter for crafting?',
-    a: 'Yes. More ores generally produce heavier weapon categories (e.g. Great Sword or Colossal instead of Dagger). For armor, more ores shift results toward Heavy armor. The exact thresholds depend on the world and probability tables.',
+    a: 'Yes. More ores generally produce heavier weapon categories (e.g. Great Sword or Colossal instead of Dagger). For armor, more ores shift results toward Heavy armor. Change the quantity in the calculator to see the odds for each category.',
   },
 ];
 
@@ -133,8 +134,8 @@ export default function CraftingPage() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg text-gray-400 leading-relaxed">
-            Everything you need to know about crafting in The Forge — from basic
-            mechanics to advanced trait optimization. Use our{' '}
+            Learn how ore mixes affect equipment rolls, how molds target an item, and which
+            ores you can make at a Crafting Stall. Use our{' '}
             <Link href="/#calculator" className="text-accent-blue hover:underline">
               crafting calculator
             </Link>{' '}
@@ -164,12 +165,8 @@ export default function CraftingPage() {
                 <h3 className="text-lg font-bold text-white">1. Gather Ores</h3>
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Mine ores from caves across World 1, World 2, and World 3 (The Peak).
-                Each ore has a <strong className="text-gray-200">rarity</strong>,{' '}
-                <strong className="text-gray-200">multiplier</strong>, and optionally a{' '}
-                <strong className="text-gray-200">trait</strong>. Higher-rarity ores like
-                Mythril, Darkryte, and Void Ore have stronger multipliers but are harder to find.
-                Browse all 88 ores in our{' '}
+                Check an ore’s multiplier and trait before choosing your mix.
+                ForgeCalc covers ores from Worlds 1–3. You can look up their stats and locations in the{' '}
                 <Link href="/ores" className="text-accent-blue hover:underline">
                   ore directory
                 </Link>.
@@ -184,11 +181,10 @@ export default function CraftingPage() {
                 <h3 className="text-lg font-bold text-white">2. Choose Your Mix</h3>
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Weapons require <strong className="text-gray-200">3–51 ores</strong> and
-                armor requires <strong className="text-gray-200">3–45 ores</strong>. The number
-                of ores determines your equipment category — fewer ores tend toward lighter weapons
-                (Dagger, Katana), while more ores produce heavier ones (Great Sword, Colossal).
-                The same logic applies to armor classes.
+                In the calculator, try <strong className="text-gray-200">3–51 ores for weapons</strong> or{' '}
+                <strong className="text-gray-200">3–45 for armor</strong>. Change the count to see how
+                the odds shift between equipment types. For a mold-assisted forge, check the selected
+                item’s chance in the game.
               </p>
             </Card>
 
@@ -216,11 +212,9 @@ export default function CraftingPage() {
                 <h3 className="text-lg font-bold text-white">4. Trait Activations</h3>
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Traits activate at <strong className="text-gray-200">10% composition</strong> and
-                reach full effectiveness at <strong className="text-gray-200">30%</strong>. Between
-                10–30%, strength scales linearly. Some traits stack well together (e.g. damage +
-                lifesteal), while others can be dangerous — stacking too much Max HP reduction
-                from Eye Ores can leave you with 0 health.
+                ForgeCalc starts showing a trait when its ore makes up 10% of your mix and
+                estimates full strength at 30%. For example, 3 Eye Ore in a 10-ore mix reaches 30%.
+                Eye Ore adds physical damage and reduces maximum health.
               </p>
             </Card>
           </div>
@@ -238,7 +232,7 @@ export default function CraftingPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Weapon Forging</h3>
-                  <p className="text-xs text-gray-500">3–51 ores • 5 weapon categories</p>
+                  <p className="text-xs text-gray-500">Calculator range: 3–51 ores</p>
                 </div>
               </div>
               <ul className="text-sm text-gray-400 space-y-2 mb-4">
@@ -246,7 +240,7 @@ export default function CraftingPage() {
                 <li>• <strong className="text-gray-200">Katana</strong> — Balanced speed and damage</li>
                 <li>• <strong className="text-gray-200">Straight Sword</strong> — All-rounder with moderate stats</li>
                 <li>• <strong className="text-gray-200">Great Sword</strong> — High damage, slower swing</li>
-                <li>• <strong className="text-gray-200">Colossal</strong> — Maximum damage, requires the most ores</li>
+                <li>• <strong className="text-gray-200">Colossal</strong> — A heavier weapon type in larger ore mixes</li>
               </ul>
               <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
                 <Link href="/?mode=weapon">Open Weapon Calculator</Link>
@@ -260,20 +254,85 @@ export default function CraftingPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Armor Crafting</h3>
-                  <p className="text-xs text-gray-500">3–45 ores • 3 armor classes</p>
+                  <p className="text-xs text-gray-500">Calculator range: 3–45 ores</p>
                 </div>
               </div>
               <ul className="text-sm text-gray-400 space-y-2 mb-4">
-                <li>• <strong className="text-gray-200">Light Armor</strong> — Low defense, high mobility, fewer ores needed</li>
-                <li>• <strong className="text-gray-200">Medium Armor</strong> — Balanced defense and weight</li>
-                <li>• <strong className="text-gray-200">Heavy Armor</strong> — Maximum defense, essential for boss fights and The Peak</li>
+                <li>• <strong className="text-gray-200">Light Armor</strong> — Most likely in the calculator’s smallest ore mixes</li>
+                <li>• <strong className="text-gray-200">Medium Armor</strong> — Most likely in the calculator’s 11–20 ore range</li>
+                <li>• <strong className="text-gray-200">Heavy Armor</strong> — Larger ore mixes favor this class in the calculator</li>
               </ul>
               <p className="text-xs text-gray-500 mb-4">
-                Use the armor calculator to predict defense stats, armor class probability, and trait activations for your build.
+                Use the armor calculator to compare class probabilities, ore multipliers, and traits.
               </p>
               <Button asChild variant="secondary" className="w-full" icon={<ArrowRight className="w-4 h-4" />}>
                 <Link href="/?mode=armor">Open Armor Calculator</Link>
               </Button>
+            </Card>
+          </div>
+        </section>
+
+        <section aria-labelledby="molds-and-ore-crafting" className="border-t border-white/5 pt-12">
+          <h2 id="molds-and-ore-crafting" className="scroll-mt-24 text-3xl font-bold text-white mb-8 text-center">
+            Molds &amp; Ore Crafting
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="flex flex-col p-6" hoverEffect>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-accent-blue/20 rounded-lg">
+                  <Anvil aria-hidden="true" className="w-6 h-6 text-accent-blue" />
+                </div>
+                <h3 id="molds" className="scroll-mt-24 text-xl font-bold text-white">Weapon &amp; Armor Molds</h3>
+              </div>
+              <ul className="space-y-4 text-sm text-gray-400 leading-relaxed">
+                <li><strong className="text-gray-200">Using a mold.</strong> Choose an available item at the forge,
+                  add your ores, then add Weapon Molds for a weapon or Armor Molds for armor.</li>
+                <li><strong className="text-gray-200">Getting the exact item.</strong> Each matching mold raises
+                  the selected item’s chance. For a guaranteed roll, add enough to reach 100%.</li>
+                <li><strong className="text-gray-200">Finding molds.</strong> Reaper can drop Weapon Molds, and
+                  Golem can drop Armor Molds. The Island 4 Raid Shop stocks both in its weekly supplies.</li>
+              </ul>
+            </Card>
+
+            <Card className="flex min-w-0 flex-col p-6" hoverEffect>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-accent-indigo/20 rounded-lg">
+                  <Gem aria-hidden="true" className="w-6 h-6 text-accent-indigo" />
+                </div>
+                <h3 id="ore-crafting" className="scroll-mt-24 text-xl font-bold text-white">Ore Crafting Recipes</h3>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                Visit the Forgotten Kingdom Crafting Stall on Island 2 to make these ores.
+              </p>
+              <table className="mt-4 w-full text-left text-sm text-gray-300">
+                <caption className="sr-only">Forgotten Kingdom recipes per craft</caption>
+                <thead className="border-b border-white/20">
+                  <tr>
+                    <th scope="col" className="pr-2 py-2">Ore</th>
+                    <th scope="col" className="pr-2">Ingredients</th>
+                    <th scope="col" className="pr-2">Gold</th>
+                    <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Blue Crystal Ore', '3 Quartz + 3 Sapphire', '80', '5s'],
+                    ['Mythril', '1 Obsidian + 1 Rivalite', '125', '20s'],
+                    ['Eye Ore', '2 Cuprite + 1 Rivalite', '150', '20s'],
+                    ['Lightite', '2 Diamond + 1 Eye Ore + 2 Mythril', '250', '20s'],
+                  ].map(([ore, ingredients, gold, time]) => (
+                    <tr key={ore} className="border-b border-white/10">
+                      <th scope="row" className="pr-2 py-2 font-medium text-white">{ore}</th>
+                      <td className="pr-2">{ingredients}</td>
+                      <td className="pr-2">{gold}</td>
+                      <td>{time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-3 text-sm text-gray-400">Lightite costs 250 gold with Eye Ore and Mythril
+                on hand, or 650 gold if you also craft the Eye Ore and both Mythril.</p>
             </Card>
           </div>
         </section>
@@ -290,7 +349,7 @@ export default function CraftingPage() {
               </div>
               <p className="text-sm text-gray-400">
                 Run a crafting test in the calculator first. Enter your planned ore mix and check the
-                predicted weapon type, multiplier, and traits. This prevents wasting rare ores on bad outcomes.
+                predicted weapon type, multiplier, and traits. Compare two mixes before choosing which ores to spend.
               </p>
             </Card>
 
@@ -300,8 +359,8 @@ export default function CraftingPage() {
                 <h3 className="text-white font-bold">Don&apos;t: Dilute with Filler</h3>
               </div>
               <p className="text-sm text-gray-400">
-                Adding common ores (Stone, Copper) to pad the count drags down your multiplier dramatically.
-                It&apos;s better to forge with fewer high-quality ores than to dilute your mix with weak materials.
+                A lower-multiplier ore can help you reach a different equipment category, but it lowers
+                the average of a stronger mix. Check both the multiplier and the category odds.
               </p>
             </Card>
 
@@ -311,8 +370,8 @@ export default function CraftingPage() {
                 <h3 className="text-white font-bold">Watch: Trait Stacking</h3>
               </div>
               <p className="text-sm text-gray-400">
-                Some traits synergize well (damage + critical), but stacking too much HP reduction (from Eye Ores)
-                can leave you with zero health. Always check the Traits panel in the calculator before committing.
+                Check the Traits panel before committing your ores. Eye Ore trades maximum health for physical damage,
+                so consider whether that trade works for your build.
               </p>
             </Card>
           </div>
