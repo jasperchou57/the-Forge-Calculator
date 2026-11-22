@@ -34,12 +34,10 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
     let eligibleOres = ALL_ORES;
 
     // If must contain ore, ensure it's in the list
-    if (criteria.mustContainOreSlug) {
-        const mustHave = ALL_ORES.find(o => o.slug === criteria.mustContainOreSlug);
-        if (!mustHave) {
-            return []; // Invalid ore slug
-        }
-    }
+    const requiredOre = criteria.mustContainOreSlug
+        ? ALL_ORES.find(ore => ore.slug === criteria.mustContainOreSlug)
+        : undefined;
+    if (criteria.mustContainOreSlug && !requiredOre) return [];
 
     // If targeting a trait, filter to ores with traits
     if (criteria.targetTrait) {
@@ -48,11 +46,11 @@ export function findBestCombinations(criteria: OptimizationCriteria): Optimizati
         );
     }
 
-    // Limit to ores with reasonable multipliers for performance
-    const topOres = eligibleOres
-        .filter(o => o.multiplier > 0)
-        .sort((a, b) => b.multiplier - a.multiplier)
-        .slice(0, 20); // Top 20 ores by multiplier
+    // Reserve the first slot so the required ore participates in singles, pairs and triples.
+    const partners = eligibleOres
+        .filter(ore => ore !== requiredOre && ore.multiplier > 0)
+        .sort((a, b) => b.multiplier - a.multiplier);
+    const topOres = requiredOre ? [requiredOre, ...partners.slice(0, 19)] : partners.slice(0, 20);
 
     // Generate combinations (simplified: pairs and triples)
     const combinations: SelectedOre[][] = [];

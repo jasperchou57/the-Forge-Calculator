@@ -82,7 +82,7 @@ const CRAFTING_FAQ = [
   },
   {
     q: 'How does the multiplier affect crafting results?',
-    a: 'The total multiplier is a weighted average of all ores used. Higher multipliers mean stronger base stats on the resulting weapon or armor. Mixing high-tier ores with low-tier filler ores will drag down your average, so plan carefully.',
+    a: 'A higher multiplier gives your weapon or armor stronger base stats. The forge weights ore multipliers by quantity. In a mixed recipe, Fichilliumorite takes the weighted average of the other ores. Used alone, it gives 1×.',
   },
   {
     q: 'Does ore count matter for crafting?',
@@ -196,11 +196,12 @@ export default function CraftingPage() {
                 <h3 className="text-lg font-bold text-white">3. Multiplier & Composition</h3>
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Your final <strong className="text-gray-200">multiplier</strong> is the weighted
-                average of all ores used. Mixing high-tier ores with weak filler drags down the
-                average — it&apos;s often better to use fewer, high-quality ores. The{' '}
-                <strong className="text-gray-200">composition percentage</strong> of each ore type
-                determines which traits activate and how effective they are.
+                Each ore’s quantity affects the <strong className="text-gray-200">multiplier</strong>.
+                One Starite (4×) and three Matter (8×) average 7×. Add five Fichilliumorite and the
+                mix grows from four ores to nine, still at 7×.{' '}
+                <Link href="/?mode=armor&ores=starite:1,matter:3,fichilliumorite:5#calculator" className="text-accent-blue hover:underline">
+                  Try the nine-ore mix
+                </Link>.
               </p>
             </Card>
 
@@ -356,11 +357,11 @@ export default function CraftingPage() {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-red-500" />
-                <h3 className="text-white font-bold">Don&apos;t: Dilute with Filler</h3>
+                <h3 className="text-white font-bold">Check Your Trait Share</h3>
               </div>
               <p className="text-sm text-gray-400">
-                A lower-multiplier ore can help you reach a different equipment category, but it lowers
-                the average of a stronger mix. Check both the multiplier and the category odds.
+                Adding Fichilliumorite preserves a mixed recipe’s multiplier, but each original ore
+                makes up a smaller share of the total. If a trait ore drops below 10%, its trait switches off.
               </p>
             </Card>
 
