@@ -178,7 +178,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                             <p>
                                 {ore.name} is a {ore.rarity} tier material in The Forge.
                                 With a multiplier of {ore.multiplier}x, it is considered a {ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.
-                                Players typically farm this ore in {ore.location}.
+                                {ore.rocks.includes('Crafting') ? `You can craft this ore in ${ore.location}.` : `Players typically farm this ore in ${ore.location}.`}
                             </p>
                         </section>
 
