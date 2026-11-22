@@ -70,7 +70,7 @@ const CRAFTING_FAQ = [
   },
   {
     q: 'What is the difference between weapon and armor crafting?',
-    a: 'Select Weapon to compare weapon types or Armor to compare light, medium and heavy armor. ForgeCalc uses World 1–3 data for these estimates.',
+    a: 'Weapon mode estimates the chance of each weapon category. Armor mode estimates the chances of light, medium and heavy armor. Both charts use the total ore count. Your forge location and molds can affect which item you actually get.',
   },
   {
     q: 'How do traits activate during crafting?',
@@ -166,7 +166,7 @@ export default function CraftingPage() {
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
                 Check an ore’s multiplier and trait before choosing your mix.
-                ForgeCalc covers ores from Worlds 1–3. You can look up their stats and locations in the{' '}
+                The calculator includes ores from Worlds 1–3 and selected World 4 ores, including those from Bamboo Forest, Holy Tree and Jade Spirit Cave. Find their stats and locations in the{' '}
                 <Link href="/ores" className="text-accent-blue hover:underline">
                   ore directory
                 </Link>.

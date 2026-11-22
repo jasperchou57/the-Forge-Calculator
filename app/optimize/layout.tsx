@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 const SITE_URL = 'https://www.forgeore.com';
-const TITLE = 'Forge Optimizer | The Forge Crafting Calculator & Best Recipes';
+const TITLE = 'Forge Optimizer | Compare Weapon Recipes';
 const DESCRIPTION =
-  'Find the best ore combinations for The Forge Roblox. The Forge crafting calculator optimizes recipes by weapon trait and ore multiplier. Load results into the forging calculator with one click.';
+  'Compare weapon recipes by trait and ore multiplier in The Forge. Open a mix in the calculator to see its weapon effects or switch to Armor to see its armor effects.';
 
 const OPTIMIZER_FAQ = [
   {
@@ -13,7 +13,7 @@ const OPTIMIZER_FAQ = [
   },
   {
     q: 'How do I load an optimized recipe into the crafting calculator?',
-    a: 'Click the "Use" button next to any result. The ore combination will be loaded directly into the main Forge Calculator where you can see detailed probabilities, trait activations, and predicted stats.',
+    a: 'Select Use beside a result to open that mix in Weapon mode. Switch to Armor in the calculator to see which armor traits the same ores activate.',
   },
   {
     q: 'Can I filter by specific traits or ores?',
@@ -94,12 +94,11 @@ export default function OptimizeLayout({
             <div className="text-gray-400 text-sm leading-relaxed space-y-4">
               <p>
                 The Forge Optimizer is a companion tool for the <Link href="/" className="text-accent-blue hover:underline">Forge Calculator</Link>.
-                Filter weapon recipes by ore or trait and compare their average multipliers.
+                It compares weapon recipes using ores from Worlds 1–3 and selected World 4 ores. Filter by weapon trait or ore, then sort the results by multiplier.
               </p>
               <p>
-                Every result can be loaded directly into the forging calculator with one click,
-                where you&apos;ll see full probability breakdowns, weapon or armor predictions, and trait activation details.
-                It works for both weapon crafting (3–51 ores) and armor crafting (3–45 ores) across World 1, World 2, and World 3.
+                Select Use beside a recipe to see its weapon traits and estimated weapon types.
+                To check the same mix for armor, switch to Armor in the calculator.
               </p>
             </div>
           </section>

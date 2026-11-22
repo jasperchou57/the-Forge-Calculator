@@ -54,7 +54,7 @@ const OptimizerPage = () => {
                         <h1 className="text-4xl font-bold font-heading bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                             Forge Optimizer
                         </h1>
-                        <p className="text-gray-400">Discover the best recipes for your specific goals.</p>
+                        <p className="text-gray-400">Compare weapon recipes by trait and ore multiplier.</p>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-6">
@@ -144,7 +144,7 @@ const OptimizerPage = () => {
                                 <div className="h-64 border border-dashed border-white/10 rounded-xl flex items-center justify-center text-gray-600">
                                     <div className="text-center">
                                         <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                        <p>Enter criteria to find the best forging recipes</p>
+                                        <p>Choose your filters, then select Find Recipes.</p>
                                     </div>
                                 </div>
                             ) : results.length === 0 ? (

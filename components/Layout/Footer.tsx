@@ -32,11 +32,6 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <span className="text-gray-600" title="Coming soon">
-                  Reroll Odds
-                </span>
-              </li>
-              <li>
                 <Link href="/ores" className="hover:text-accent-blue transition-colors">
                   Ore Chances <span className="text-xs text-accent-indigo ml-1">NEW</span>
                 </Link>
@@ -56,11 +51,6 @@ const Footer: React.FC = () => {
                 <Link href="/#setups" className="hover:text-accent-blue transition-colors">
                   Example Mixes
                 </Link>
-              </li>
-              <li>
-                <span className="text-gray-600" title="Coming soon">
-                  API Docs
-                </span>
               </li>
               <li>
                 <Link href="/#changelog" className="hover:text-accent-blue transition-colors">

@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Layout/Header';
 import Button from '@/components/UI/Button';
-import { ALL_ORES as ORES_DATA } from '@/lib/ores';
+import { ALL_ORES as ORES_DATA, traitForMode } from '@/lib/ores';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const ore = ORES_DATA.find((o) => o.slug === slug);
     if (!ore) return { title: 'Ore Not Found' };
 
-    const title = `${ore.name} Stats, Location & Best Recipes - The Forge Calculator`;
-    const description = `Everything about ${ore.name} in The Forge. Rarity: ${ore.rarity}, Multiplier: ${ore.multiplier}x. Found in ${ore.location}. Check best crafting combinations.`;
+    const title = `${ore.name} Stats, Location & Example Recipe - The Forge Calculator`;
+    const description = `See where to find ${ore.name}, check its ${ore.multiplier}× multiplier and open a three-ore example recipe in the Forge Calculator.`;
     const url = `${SITE_URL}/ores/${slug}`;
 
     return {
@@ -76,6 +76,9 @@ export default async function OreDetailPage({ params }: PageProps) {
     if (!ore) {
         notFound();
     }
+
+    const mode = traitForMode(ore, 'armor') && !traitForMode(ore, 'weapon') ? 'armor' : 'weapon';
+    const calculatorHref = `/?mode=${mode}&ores=${ore.slug}:3#calculator`;
 
     return (
         <div className="min-h-screen bg-background font-sans text-white pb-20">
@@ -121,8 +124,8 @@ export default async function OreDetailPage({ params }: PageProps) {
 
                                 <div className="flex gap-4 pt-4">
                                     <Button asChild icon={<Sparkles className="w-4 h-4" />}>
-                                        <Link href={`/?mode=weapon&ores=${ore.slug}:3`}>
-                                            Open in Crafting Calculator
+                                        <Link href={calculatorHref}>
+                                            Open in Calculator
                                         </Link>
                                     </Button>
                                     <Button variant="secondary" icon={<Share2 className="w-4 h-4" />}>
@@ -180,22 +183,18 @@ export default async function OreDetailPage({ params }: PageProps) {
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-bold text-white mb-4">Best Combinations</h2>
-                            <p className="mb-4">
-                                Here are some popular recipes using {ore.name}:
-                            </p>
+                            <h2 className="text-2xl font-bold text-white mb-4">Example Recipe</h2>
 
                             <div className="grid gap-4">
-                                {/* Dynamic Recommendation Mockup */}
                                 <div className="bg-surface border border-white/5 p-4 rounded-lg flex justify-between items-center">
                                     <div className="flex items-center gap-3">
                                         <span className="font-mono text-accent-blue">Triple Stack</span>
                                         <span className="text-sm text-gray-400">3x {ore.name}</span>
                                     </div>
                                     <div className="text-right">
-                                        <div className="font-bold">{(ore.multiplier).toFixed(2)}x Power</div>
-                                    <Link href={`/?mode=weapon&ores=${ore.slug}:3`} className="text-xs text-accent-blue hover:underline">
-                                            Test in Forge Calculator &rarr;
+                                        <div className="font-bold">{ore.multiplier.toFixed(2)}× Multiplier</div>
+                                        <Link href={calculatorHref} className="text-xs text-accent-blue hover:underline">
+                                            Open in Calculator
                                         </Link>
                                     </div>
                                 </div>
