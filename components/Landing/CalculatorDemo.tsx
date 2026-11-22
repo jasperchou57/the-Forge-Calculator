@@ -215,7 +215,7 @@ const CalculatorDemoInner: React.FC = () => {
         const query = searchTerm.trim().toLowerCase();
 
         return ALL_ORES
-            .filter((ore) => activeWorld === 'All' || WORLD_GROUPS[activeWorld].includes(ore.location))
+            .filter((ore) => activeWorld === 'All' || WORLD_GROUPS[activeWorld].includes(ore.calculatorRegion ?? ore.location))
             .filter(
                 (ore) =>
                     query === '' ||

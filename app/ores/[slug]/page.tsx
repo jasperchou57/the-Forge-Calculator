@@ -177,8 +177,8 @@ export default async function OreDetailPage({ params }: PageProps) {
                             <h2 className="text-2xl font-bold text-white mb-4">About {ore.name}</h2>
                             <p>
                                 {ore.name} is a {ore.rarity} tier material in The Forge.
-                                With a multiplier of {ore.multiplier}x, it is considered a {ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.
-                                {ore.rocks.includes('Crafting') ? `You can craft this ore in ${ore.location}.` : `Players typically farm this ore in ${ore.location}.`}
+                                With a multiplier of {ore.multiplier}x, it is considered a {ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.{' '}
+                                {ore.acquisitionNote ?? (ore.rocks.includes('Crafting') ? `You can craft this ore in ${ore.location}.` : `Players typically farm this ore in ${ore.location}.`)}
                             </p>
                         </section>
 

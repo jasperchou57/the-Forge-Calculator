@@ -38,6 +38,8 @@ export interface Ore {
     price: number | null;
     color: string;
     location: GameLocation;
+    calculatorRegion?: GameLocation;
+    acquisitionNote?: string;
     trait: string | null; // Trait description or null
     rocks: string[]; // Rock types where ore can be found
     // Computed/derived fields

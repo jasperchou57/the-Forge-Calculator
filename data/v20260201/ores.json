@@ -3,9 +3,9 @@
     "version": "v20261122",
     "source": "The Forge Wiki, Eovant, and community data",
     "lastUpdated": "2026-11-22",
-    "totalOres": 134,
+    "totalOres": 140,
     "rarityTiers": ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythical", "Divine", "Relic", "Exotic"],
-    "locations": ["Stonewake's Cross", "Forgotten Kingdom", "Goblin Cave", "Frostspire Expanse", "The Peak", "Enemy Drop", "Boss Drop", "Bamboo Forest", "Holy Tree", "Jade Spirit Cave", "Aurelia Hall", "Tower of Hell", "Void Cave", "Raven Cave"]
+    "locations": ["Stonewake's Cross", "Forgotten Kingdom", "Goblin Cave", "Frostspire Expanse", "The Peak", "Enemy Drop", "Boss Drop", "Bamboo Forest", "Holy Tree", "Jade Spirit Cave", "Aurelia Hall", "Tower of Hell", "Void Cave", "Raven Cave", "All Islands (Comet Star)"]
   },
   "gameMechanics": {
     "traitActivation": {
@@ -164,6 +164,12 @@
     {"slug": "wolfarite", "name": "Wolfarite", "rarity": "Exotic", "chance": "Crafted", "multiplier": 15.48, "price": 290.25, "rocks": ["Crafting"], "location": "Aurelia Hall", "traits": {"weapon": "At full strength, gain 8% attack speed, 15% physical damage and 6% movement speed, but lose 8% maximum health."}},
     {"slug": "sentira", "name": "Sentira", "rarity": "Relic", "chance": "Crafted", "multiplier": 16.3, "price": 305.63, "rocks": ["Crafting"], "location": "Aurelia Hall", "traits": {"armor": "At full strength, gain 5% maximum health and recover 10 health per second. When hit, you have a 50% chance to take 50% less damage. Thorns reflect 3% of the physical damage you take back to the attacker, up to 5% of your maximum health per hit."}},
     {"slug": "vooite", "name": "Vooite", "rarity": "Exotic", "chance": "1/30", "multiplier": 21.0, "price": 393.75, "rocks": ["Wave 5", "Wave 7", "Wave 9"], "location": "Tower of Hell", "traits": {"both": "At low health, you can frighten and poison nearby enemies. Radioactive deals area damage during combat.", "armor": "Thorns reflect damage. Toxic Veins can release an additional poison cloud at low health."}},
+    {"slug": "star-dust", "name": "Star Dust", "rarity": "Epic", "chance": "Event drop", "multiplier": 2.5, "price": 46.88, "rocks": ["Any Rock"], "location": "All Islands (Comet Star)", "calculatorRegion": "Void Cave", "acquisitionNote": "During the Comet Star event, mining any rock on any island gives you a chance to find Star Dust."},
+    {"slug": "starite", "name": "Starite", "rarity": "Mythical", "chance": "Crafted", "multiplier": 4, "price": 75, "rocks": ["Crafting"], "location": "Void Cave", "traits": {"armor": "At full strength, gain 4% luck. Mining a rock gives you a 6% chance to receive one extra ore."}},
+    {"slug": "matter", "name": "Matter", "rarity": "Relic", "chance": "Crafted", "multiplier": 8, "price": 150, "rocks": ["Crafting"], "location": "Void Cave"},
+    {"slug": "anti-matter", "name": "Anti Matter", "rarity": "Relic", "chance": "Crafted", "multiplier": 11.5, "price": 215.63, "rocks": ["Crafting"], "location": "Void Cave"},
+    {"slug": "singularity", "name": "Singularity", "rarity": "Exotic", "chance": "Crafted", "multiplier": 12.75, "price": 239.06, "rocks": ["Crafting"], "location": "Void Cave"},
+    {"slug": "supermassive-black-hole", "name": "Supermassive Black Hole", "rarity": "Exotic", "chance": "Crafted", "multiplier": 18, "price": 337.5, "rocks": ["Crafting"], "location": "Void Cave", "traits": {"weapon": "At full strength, each hit has a 45% chance to cause an explosion that deals 65% of base weapon damage in an area. Each hit also has a 45% chance to burn the target for 5 seconds, dealing 50% of base weapon damage per second."}},
     {"slug": "galaxite", "name": "Galaxite", "rarity": "Divine", "chance": "1/1", "multiplier": 25, "price": 468.75, "rocks": ["Galaxy Guardian"], "location": "Void Cave", "traits": {"weapon": "Blackhole pulls in enemies and explodes. Increased critical chance and critical damage.", "armor": "Increased maximum health, health regeneration, a chance to reduce incoming damage and thorns."}}
   ]
 }
