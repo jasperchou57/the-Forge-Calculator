@@ -439,7 +439,7 @@ const CalculatorDemoInner: React.FC = () => {
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: ore.color }}></div>
                                         <span className="text-sm text-white">{ore.name}</span>
-                                        <span className="text-xs text-gray-500">({ore.multiplier}x)</span>
+                                        <span className="text-xs text-gray-500">({ore.usesMixAverage ? 'mix average' : `${ore.multiplier}x`})</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button 
@@ -510,7 +510,7 @@ const CalculatorDemoInner: React.FC = () => {
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: ore.color }}></div>
                                         <span className="text-[10px] font-mono opacity-50 group-hover:opacity-100 transition-opacity">
-                                            {ore.multiplier}x
+                                            {ore.usesMixAverage ? 'Mix average' : `${ore.multiplier}x`}
                                         </span>
                                     </div>
                                     <div className="text-sm font-medium">{ore.name}</div>
@@ -564,6 +564,12 @@ const CalculatorDemoInner: React.FC = () => {
                             </div>
                         </div>
 
+                        {selectedOres.some(({ ore }) => ore.usesMixAverage) && (
+                            <p className="text-sm text-gray-300">
+                                Fichilliumorite counts toward total ores and uses the weighted average of the other ores. On its own, it gives 1×.
+                            </p>
+                        )}
+
                         {probabilityData.length > 0 && (
                             <ProbabilityChart
                                 data={probabilityData}
@@ -582,7 +588,7 @@ const CalculatorDemoInner: React.FC = () => {
                                             <span className="text-base font-semibold text-white">{t.sourceOre}</span>
                                             <span className="whitespace-nowrap text-sm font-medium text-blue-300 tabular-nums">{Number(t.mixPercent.toFixed(1))}% of mix</span>
                                         </div>
-                                        <div className="mt-1 text-sm leading-[21px] text-gray-300">
+                                        <div className="mt-1 whitespace-pre-line text-sm leading-[21px] text-gray-300">
                                             {t.trait}
                                         </div>
                                     </div>

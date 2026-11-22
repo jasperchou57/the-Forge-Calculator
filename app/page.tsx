@@ -33,7 +33,7 @@ import {
 const FAQ_DATA = [
   {
     q: 'What does the ore multiplier tell me?',
-    a: 'The calculator averages the multiplier of every ore in your mix. For example, six Iron at 0.35× and six Gold at 0.65× give a 0.50× mix.'
+    a: 'The calculator weights ore multipliers by quantity. Six Iron at 0.35× and six Gold at 0.65× give a 0.50× mix. Adding Fichilliumorite keeps that average. A mix of only Fichilliumorite gives 1×.'
   },
   {
     q: 'Which ores can I use?',
@@ -298,7 +298,7 @@ export default function Home() {
           
           <div className="max-w-2xl mx-auto space-y-6">
             {[
-              { ver: "v20261122", date: "Nov 22, 2026", changes: ["Added Star Dust and 5 ores crafted in Void Cave to the World 4 filter", "Added 6 crafted ores from Aurelia Hall and 12 Jade Spirit Cave ores to the World 4 filter"] },
+              { ver: "v20261122", date: "Nov 22, 2026", changes: ["Added 11 Tower of Hell ores, including Fichilliumorite and its mixed-recipe multiplier", "Added Star Dust and 5 ores crafted in Void Cave to the World 4 filter", "Added 6 crafted ores from Aurelia Hall and 12 Jade Spirit Cave ores to the World 4 filter"] },
               { ver: "v20261121", date: "Nov 21, 2026", changes: ["Added 15 Holy Tree ores and 13 Bamboo Forest ores to the World 4 filter", "Updated 43 ore multipliers", "Added World 4 filtering for Galaxite and Vooite", "Separated weapon and armor traits in recipe results"] },
               { ver: "v20260201", date: "Feb 1, 2026", changes: ["Listed 88 ores", "Added World 1/2 vs World 3 ore filtering", "URL sharing for forge setups"] },
               { ver: "v20260115", date: "Jan 15, 2026", changes: ["Added Frostspire Expanse ores", "Fixed trait activation threshold calculation", "Mobile UI improvements"] },

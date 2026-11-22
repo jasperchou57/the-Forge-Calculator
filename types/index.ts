@@ -35,6 +35,7 @@ export interface Ore {
     rarity: OreRarity;
     chance: string; // e.g. "1/500"
     multiplier: number;
+    usesMixAverage?: boolean;
     price: number | null;
     color: string;
     location: GameLocation;

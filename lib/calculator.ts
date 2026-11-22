@@ -90,13 +90,15 @@ export function calculateForgingStats(selectedOres: SelectedOre[], mode: Craftin
         };
     }
 
-    // 1. Calculate Average Multiplier
-    // Formula: Sum of (ore.multiplier * quantity) / Total ore count
-    const sumMultiplier = selectedOres.reduce(
-        (sum, item) => sum + (item.ore.multiplier * item.quantity), 
-        0
-    );
-    const avgMultiplier = Number((sumMultiplier / totalOreCount).toFixed(2));
+    // Fichilliumorite counts toward equipment odds and trait shares at every quantity.
+    let weightedSum = 0;
+    let contributingCount = 0;
+    for (const { ore, quantity } of selectedOres) {
+        if (ore.usesMixAverage) continue;
+        weightedSum += ore.multiplier * quantity;
+        contributingCount += quantity;
+    }
+    const avgMultiplier = contributingCount ? Number((weightedSum / contributingCount).toFixed(2)) : 1;
 
     const activeTraits = selectedOres.flatMap(({ ore, quantity }) => {
         const trait = traitForMode(ore, mode);

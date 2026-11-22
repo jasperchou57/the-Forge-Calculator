@@ -92,6 +92,31 @@ describe('Calculator Engine - Basic Calculations', () => {
 describe('Reviewed ore data in the calculator', () => {
     const recipe = (slug: string, quantity = 3) => [{ ore: ALL_ORES.find(ore => ore.slug === slug)!, quantity }];
 
+    it.each([
+        [1, 3, 1, 7],
+        [1, 3, 5, 7],
+        [3, 1, 1, 5],
+        [0, 0, 3, 1],
+    ])('averages %i Starite and %i Matter with %i Fichilliumorite at %i×', (starite, matter, filler, expected) => {
+        const mix = [...recipe('starite', starite), ...recipe('matter', matter), ...recipe('fichilliumorite', filler)]
+            .filter(item => item.quantity > 0);
+        for (const mode of ['weapon', 'armor'] as const) {
+            const stats = calculateForgingStats(mix, mode);
+            expect(stats.totalMultiplier).toBe(expected);
+            expect(stats.totalOreCount).toBe(starite + matter + filler);
+        }
+    });
+
+    it('counts Fichilliumorite when determining trait activation and weapon odds', () => {
+        const regular = recipe('fierce-jade', 1);
+        const atThreshold = calculateForgingStats([...regular, ...recipe('fichilliumorite', 9)]);
+        const below = calculateForgingStats([...regular, ...recipe('fichilliumorite', 11)]);
+        expect(atThreshold.activeTraits[0].mixPercent).toBe(10);
+        expect(below.activeTraits).toEqual([]);
+        expect(below.totalMultiplier).toBe(17);
+        expect(below.weaponProbabilities).toEqual(calculateForgingStats(recipe('iron', 12)).weaponProbabilities);
+    });
+
     it('uses the corrected Vooite multiplier with shared and armor-only effects', () => {
         const weapon = calculateForgingStats(recipe('vooite'), 'weapon');
         const armor = calculateForgingStats(recipe('vooite'), 'armor');

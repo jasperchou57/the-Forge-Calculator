@@ -143,7 +143,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                                 <TrendingUp className="w-6 h-6" />
                             </div>
                             <div>
-                                <div className="text-xs text-gray-500 font-mono uppercase">Multiplier</div>
+                                <div className="text-xs text-gray-500 font-mono uppercase">{ore.usesMixAverage ? 'Solo multiplier' : 'Multiplier'}</div>
                                 <div className="text-2xl font-bold text-white">{ore.multiplier}x</div>
                             </div>
                         </div>
@@ -177,7 +177,9 @@ export default async function OreDetailPage({ params }: PageProps) {
                             <h2 className="text-2xl font-bold text-white mb-4">About {ore.name}</h2>
                             <p>
                                 {ore.name} is a {ore.rarity} tier material in The Forge.
-                                With a multiplier of {ore.multiplier}x, it is considered a {ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.{' '}
+                                {' '}{ore.usesMixAverage
+                                    ? 'In a mixed recipe, its multiplier follows the quantity-weighted average of the other ores. Used alone, it gives 1×.'
+                                    : `With a multiplier of ${ore.multiplier}x, it is considered a ${ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.`}{' '}
                                 {ore.acquisitionNote ?? (ore.rocks.includes('Crafting') ? `You can craft this ore in ${ore.location}.` : `Players typically farm this ore in ${ore.location}.`)}
                             </p>
                         </section>
