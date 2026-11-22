@@ -117,6 +117,22 @@ describe('Reviewed ore data in the calculator', () => {
         expect(below.weaponProbabilities).toEqual(calculateForgingStats(recipe('iron', 12)).weaponProbabilities);
     });
 
+    it.each([
+        [3, 0, 0, 0, 8],
+        [5, 0, 1, 3, 7],
+        [2, 1, 0, 0, 5.67],
+        [1, 2, 0, 0, 3.33],
+        [2, 1, 1, 3, 7],
+    ])('weights %i Bismuth, %i Fichilliumorite, %i Starite and %i Matter at %f×', (b, f, s, m, expected) => {
+        const mix = [...recipe('bismuth', b), ...recipe('fichilliumorite', f), ...recipe('starite', s), ...recipe('matter', m)]
+            .filter(({ quantity }) => quantity > 0);
+        for (const mode of ['weapon', 'armor'] as const) {
+            const stats = calculateForgingStats(mix, mode);
+            expect(stats.totalMultiplier).toBe(expected);
+            expect(stats.totalOreCount).toBe(b + f + s + m);
+        }
+    });
+
     it('uses the corrected Vooite multiplier with shared and armor-only effects', () => {
         const weapon = calculateForgingStats(recipe('vooite'), 'weapon');
         const armor = calculateForgingStats(recipe('vooite'), 'armor');

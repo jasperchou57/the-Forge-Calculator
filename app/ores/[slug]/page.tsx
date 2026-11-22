@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Layout/Header';
 import Button from '@/components/UI/Button';
-import { ALL_ORES as ORES_DATA, traitForMode } from '@/lib/ores';
+import { ALL_ORES as ORES_DATA, MIX_AVERAGE_DESCRIPTION, traitForMode } from '@/lib/ores';
 import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -178,7 +178,7 @@ export default async function OreDetailPage({ params }: PageProps) {
                             <p>
                                 {ore.name} is a {ore.rarity} tier material in The Forge.
                                 {' '}{ore.usesMixAverage
-                                    ? 'In a mixed recipe, its multiplier follows the quantity-weighted average of the other ores. Used alone, it gives 1×.'
+                                    ? MIX_AVERAGE_DESCRIPTION
                                     : `With a multiplier of ${ore.multiplier}x, it is considered a ${ore.multiplier > 4 ? "high-tier" : "standard"} choice for crafting.`}{' '}
                                 {ore.acquisitionNote ?? (ore.rocks.includes('Crafting') ? `You can craft this ore in ${ore.location}.` : `Players typically farm this ore in ${ore.location}.`)}
                             </p>

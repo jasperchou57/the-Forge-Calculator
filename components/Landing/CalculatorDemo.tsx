@@ -8,7 +8,7 @@ import Button from '../UI/Button';
 import Badge from '../UI/Badge';
 import { CraftingMode, SelectedOre, Ore } from '@/types';
 import { calculateForgingStats, validateOreSelection, getMaterialName } from '@/lib/calculator';
-import { ALL_ORES, traitForMode } from '@/lib/ores';
+import { ALL_ORES, MIX_AVERAGE_DESCRIPTION, traitForMode } from '@/lib/ores';
 import { RefreshCw, Zap, Share2, Check, Minus, Plus, Sword, Shield, AlertCircle } from 'lucide-react';
 
 const WORLD_GROUPS = {
@@ -566,7 +566,7 @@ const CalculatorDemoInner: React.FC = () => {
 
                         {selectedOres.some(({ ore }) => ore.usesMixAverage) && (
                             <p className="text-sm text-gray-300">
-                                Fichilliumorite counts toward total ores and uses the weighted average of the other ores. On its own, it gives 1×.
+                                {MIX_AVERAGE_DESCRIPTION}
                             </p>
                         )}
 

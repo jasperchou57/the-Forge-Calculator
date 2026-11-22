@@ -90,15 +90,16 @@ export function calculateForgingStats(selectedOres: SelectedOre[], mode: Craftin
         };
     }
 
-    // Fichilliumorite counts toward equipment odds and trait shares at every quantity.
+    // With only mix-average ores, weight their base multipliers by quantity.
+    const regularOres = selectedOres.filter(({ ore, quantity }) => !ore.usesMixAverage && quantity > 0);
+    const multiplierOres = regularOres.length ? regularOres : selectedOres;
     let weightedSum = 0;
     let contributingCount = 0;
-    for (const { ore, quantity } of selectedOres) {
-        if (ore.usesMixAverage) continue;
+    for (const { ore, quantity } of multiplierOres) {
         weightedSum += ore.multiplier * quantity;
         contributingCount += quantity;
     }
-    const avgMultiplier = contributingCount ? Number((weightedSum / contributingCount).toFixed(2)) : 1;
+    const avgMultiplier = Number((weightedSum / contributingCount).toFixed(2));
 
     const activeTraits = selectedOres.flatMap(({ ore, quantity }) => {
         const trait = traitForMode(ore, mode);

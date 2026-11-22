@@ -82,7 +82,7 @@ const CRAFTING_FAQ = [
   },
   {
     q: 'How does the multiplier affect crafting results?',
-    a: 'A higher multiplier gives your weapon or armor stronger base stats. The forge weights ore multipliers by quantity. In a mixed recipe, Fichilliumorite takes the weighted average of the other ores. Used alone, it gives 1×.',
+    a: 'A higher multiplier gives your weapon or armor stronger base stats. The forge weights ore multipliers by quantity. Bismuth and Fichilliumorite take the weighted average of any regular ores in the mix. With only these special ores, the forge weights Bismuth at 8× and Fichilliumorite at 1×.',
   },
   {
     q: 'Does ore count matter for crafting?',
@@ -360,7 +360,7 @@ export default function CraftingPage() {
                 <h3 className="text-white font-bold">Check Your Trait Share</h3>
               </div>
               <p className="text-sm text-gray-400">
-                Adding Fichilliumorite preserves a mixed recipe’s multiplier, but each original ore
+                Adding Fichilliumorite to a mix with regular ores preserves its multiplier, but each original ore
                 makes up a smaller share of the total. If a trait ore drops below 10%, its trait switches off.
               </p>
             </Card>

@@ -3,6 +3,8 @@ import type { CraftingMode, Ore, OreTraits } from '@/types';
 
 const colors: Record<string, string> = data.rarityColors;
 
+export const MIX_AVERAGE_DESCRIPTION = 'Bismuth and Fichilliumorite add to your ore count and copy the weighted average of any regular ores. In recipes made entirely from these two ore types, each Bismuth counts as 8× and each Fichilliumorite as 1×.';
+
 export function traitForMode(ore: Ore, mode: CraftingMode): string | null {
     if (!ore.traits) return ore.trait;
     return [ore.traits.both, ore.traits[mode]].filter(Boolean).join(' ') || null;

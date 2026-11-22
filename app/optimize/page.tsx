@@ -165,7 +165,7 @@ const OptimizerPage = () => {
                                             <div className="flex -space-x-3">
                                                 {res.ores.map((selectedOre, i) => (
                                                     <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0B0C0E] bg-surface flex items-center justify-center" title={selectedOre.ore.name} style={{ backgroundColor: selectedOre.ore.color }}>
-                                                        <span className="text-[10px] bg-black/50 text-white rounded px-1">{selectedOre.ore.usesMixAverage ? res.stats.totalMultiplier : selectedOre.ore.multiplier}x</span>
+                                                        <span className="text-[10px] bg-black/50 text-white rounded px-1">{selectedOre.ore.usesMixAverage && res.ores.some(({ ore }) => !ore.usesMixAverage) ? res.stats.totalMultiplier : selectedOre.ore.multiplier}x</span>
                                                     </div>
                                                 ))}
                                             </div>
