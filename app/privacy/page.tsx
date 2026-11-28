@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'Privacy Policy - ForgeCalc';
 const DESCRIPTION =
   'Privacy policy for ForgeCalc (forgeore.com), a fan-made calculator and ore database for The Forge Roblox.';

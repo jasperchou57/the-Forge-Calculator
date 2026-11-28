@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation';
 
 const RARITY_COLORS = oresJSON.rarityColors as Record<string, string>;
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 
 // Helper to get color from rarity
 function getOreColor(rarity: string): string {

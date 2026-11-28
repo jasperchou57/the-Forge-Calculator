@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'Support - ForgeCalc';
 const DESCRIPTION =
   'Get help with ForgeCalc (forgeore.com). Report bugs, request features, or contact us for any questions about The Forge Calculator.';

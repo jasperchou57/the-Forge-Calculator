@@ -20,7 +20,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'The Forge Crafting Guide | Crafting Calculator & Forging Mechanics';
 const DESCRIPTION =
   'Complete guide to crafting in The Forge Roblox. Learn how the forging system works, understand ore composition, trait activations, and weapon/armor crafting mechanics. Use our crafting calculator to plan your forges.';

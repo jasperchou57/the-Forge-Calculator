@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'Cookie Settings - ForgeCalc';
 const DESCRIPTION =
   'Cookie information and settings for ForgeCalc (forgeore.com). Learn how cookies may be used and how to control them in your browser.';

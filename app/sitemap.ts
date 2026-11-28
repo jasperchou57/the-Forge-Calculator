@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import oresJSON from '@/data/v20260201/ores.json';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastUpdatedRaw = oresJSON.metadata?.lastUpdated || '2026-02-01';

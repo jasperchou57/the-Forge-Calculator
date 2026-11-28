@@ -5,7 +5,7 @@ import oresJSON from '@/data/v20260201/ores.json';
 import { Metadata } from 'next';
 import { ArrowRight, Database } from 'lucide-react';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'All Ores List & Stats - The Forge Roblox Wiki';
 const DESCRIPTION =
     'Complete database of all ores in The Forge Roblox. Compare multipliers, rarities, and traits for Iron, Gold, Mythril, Void Ore, and more.';

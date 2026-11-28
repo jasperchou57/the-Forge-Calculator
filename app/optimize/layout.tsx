@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 const TITLE = 'Forge Optimizer | Compare Weapon Recipes';
 const DESCRIPTION =
   'Compare weapon recipes by trait and ore multiplier in The Forge. Open a mix in the calculator to see its weapon effects or switch to Armor to see its armor effects.';

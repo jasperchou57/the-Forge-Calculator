@@ -8,7 +8,7 @@ import oreData from '@/data/v20260201/ores.json';
 import Card from '@/components/UI/Card';
 import Button from '@/components/UI/Button';
 
-const SITE_URL = 'https://www.forgeore.com';
+const SITE_URL = 'https://forgeore.com';
 
 export const metadata: Metadata = {
   alternates: {
