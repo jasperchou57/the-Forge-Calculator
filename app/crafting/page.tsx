@@ -77,8 +77,8 @@ const CRAFTING_FAQ = [
     a: 'In ForgeCalc, a trait appears when its ore makes up at least 10% of the mix. At 30% or higher, the trait reaches full (100%) effectiveness. Between 10–30%, effectiveness scales linearly. Planning your ore ratios is key to activating the right traits.',
   },
   {
-    q: 'What is a crafting test in The Forge?',
-    a: 'A crafting test is when you simulate a forge before committing real ores. Use the ForgeCalc crafting calculator to enter your ore combination and see predicted outcomes — weapon type, multiplier, trait activations, and probability distributions — all without spending resources.',
+    q: 'What can I preview before forging?',
+    a: 'The calculator shows weapon or armor type chances, your mix’s multiplier, and active traits.',
   },
   {
     q: 'How does the multiplier affect crafting results?',
@@ -165,11 +165,10 @@ export default function CraftingPage() {
                 <h3 className="text-lg font-bold text-white">1. Gather Ores</h3>
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Check an ore’s multiplier and trait before choosing your mix.
-                The calculator includes ores from Worlds 1–3 and selected World 4 ores, including those from Bamboo Forest, Holy Tree and Jade Spirit Cave. Find their stats and locations in the{' '}
+                Use the <strong className="text-gray-200">W4</strong> filter to find World 4 ores. Check the{' '}
                 <Link href="/ores" className="text-accent-blue hover:underline">
                   ore directory
-                </Link>.
+                </Link> for mining locations.
               </p>
             </Card>
 
@@ -273,6 +272,45 @@ export default function CraftingPage() {
           </div>
         </section>
 
+        <section aria-labelledby="sword-shield-and-armor-sets" className="border-t border-white/5 pt-12">
+          <h2 id="sword-shield-and-armor-sets" className="scroll-mt-24 text-3xl font-bold text-white mb-8 text-center">
+            Sword &amp; Shield and Armor Sets
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-6" hoverEffect>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-accent-blue/20 rounded-lg">
+                  <Swords aria-hidden="true" className="w-6 h-6 text-accent-blue" />
+                </div>
+                <h3 className="text-xl font-bold text-white">Where to Forge Swords &amp; Shields</h3>
+              </div>
+              <ul className="space-y-4 text-sm text-gray-400 leading-relaxed">
+                <li><strong className="text-gray-200">Knight’s Bulwark.</strong> Forge it on Island 2 or Island 3.</li>
+                <li><strong className="text-gray-200">Rosethorn.</strong> Buy the recipe from the Abyss Trader for
+                  1,000 Abyss Shards, then craft it at the Abyss forge.</li>
+              </ul>
+            </Card>
+
+            <Card className="p-6" hoverEffect>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-accent-indigo/20 rounded-lg">
+                  <Shield aria-hidden="true" className="w-6 h-6 text-accent-indigo" />
+                </div>
+                <h3 className="text-xl font-bold text-white">Armor Set Bonuses</h3>
+              </div>
+              <ul className="space-y-4 text-sm text-gray-400 leading-relaxed">
+                <li><strong className="text-gray-200">Set bonuses.</strong> Wearing two pieces of a three-piece set
+                  grants two-thirds of its stat bonus. Equip the full set to unlock its ability.
+                  A matching weapon gains attack speed and damage.</li>
+                <li><strong className="text-gray-200">Gloomwarden.</strong> Each piece of this medium armor set has
+                  its own recipe. Buy each recipe at the Raid Shop for 250 Gold Raid Shards, then forge the
+                  piece on Island 4 or at the Abyss forge.</li>
+              </ul>
+            </Card>
+          </div>
+        </section>
+
         <section aria-labelledby="molds-and-ore-crafting" className="border-t border-white/5 pt-12">
           <h2 id="molds-and-ore-crafting" className="scroll-mt-24 text-3xl font-bold text-white mb-8 text-center">
             Molds &amp; Ore Crafting
@@ -346,11 +384,10 @@ export default function CraftingPage() {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-green-500" />
-                <h3 className="text-white font-bold">Do: Plan Before Forging</h3>
+                <h3 className="text-white font-bold">Preview Your Mix</h3>
               </div>
               <p className="text-sm text-gray-400">
-                Run a crafting test in the calculator first. Enter your planned ore mix and check the
-                predicted weapon type, multiplier, and traits. Compare two mixes before choosing which ores to spend.
+                Compare your mixes before spending any ore.
               </p>
             </Card>
 
@@ -368,11 +405,10 @@ export default function CraftingPage() {
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-yellow-500" />
-                <h3 className="text-white font-bold">Watch: Trait Stacking</h3>
+                <h3 className="text-white font-bold">Check Trait Trade-offs</h3>
               </div>
               <p className="text-sm text-gray-400">
-                Check the Traits panel before committing your ores. Eye Ore trades maximum health for physical damage,
-                so consider whether that trade works for your build.
+                Check <strong className="text-gray-200">Active traits</strong> for downsides. Eye Ore boosts physical damage but lowers max health.
               </p>
             </Card>
           </div>
